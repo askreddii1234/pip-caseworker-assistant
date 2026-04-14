@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .govuk-tag {
+    @apply inline-block px-2 py-0.5 text-xs font-bold uppercase tracking-wide;
+  }
+  .govuk-tag-green {
+    @apply bg-govuk-green text-white;
+  }
+  .govuk-tag-red {
+    @apply bg-govuk-red text-white;
+  }
+  .govuk-tag-yellow {
+    @apply bg-govuk-yellow text-govuk-dark;
+  }
+  .govuk-tag-blue {
+    @apply bg-govuk-blue text-white;
+  }
+  .govuk-tag-grey {
+    @apply bg-govuk-grey text-white;
+  }
+  .govuk-tag-orange {
+    @apply bg-govuk-orange text-white;
+  }
+}

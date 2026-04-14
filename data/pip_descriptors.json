@@ -1,0 +1,60 @@
+{
+  "descriptors": [
+    {"activity_number": 1, "activity_name": "Preparing food", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can prepare and cook a simple meal unaided", "points": 0},
+    {"activity_number": 1, "activity_name": "Preparing food", "category": "daily_living", "descriptor_letter": "b", "descriptor_text": "Needs to use an aid or appliance to be able to either prepare or cook a simple meal", "points": 2},
+    {"activity_number": 1, "activity_name": "Preparing food", "category": "daily_living", "descriptor_letter": "c", "descriptor_text": "Cannot cook a simple meal using a conventional cooker but is able to do so using a microwave", "points": 2},
+    {"activity_number": 1, "activity_name": "Preparing food", "category": "daily_living", "descriptor_letter": "d", "descriptor_text": "Needs prompting to be able to either prepare or cook a simple meal", "points": 2},
+    {"activity_number": 1, "activity_name": "Preparing food", "category": "daily_living", "descriptor_letter": "e", "descriptor_text": "Needs supervision or assistance to either prepare or cook a simple meal", "points": 4},
+    {"activity_number": 1, "activity_name": "Preparing food", "category": "daily_living", "descriptor_letter": "f", "descriptor_text": "Cannot prepare and cook food", "points": 8},
+
+    {"activity_number": 2, "activity_name": "Taking nutrition", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can take nutrition unaided", "points": 0},
+    {"activity_number": 2, "activity_name": "Taking nutrition", "category": "daily_living", "descriptor_letter": "d", "descriptor_text": "Needs prompting to be able to take nutrition", "points": 4},
+    {"activity_number": 2, "activity_name": "Taking nutrition", "category": "daily_living", "descriptor_letter": "f", "descriptor_text": "Cannot convey food and drink to their mouth and needs another person to do so", "points": 10},
+
+    {"activity_number": 3, "activity_name": "Managing therapy or monitoring a health condition", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Either does not receive medication/therapy or can manage it unaided", "points": 0},
+    {"activity_number": 3, "activity_name": "Managing therapy or monitoring a health condition", "category": "daily_living", "descriptor_letter": "b", "descriptor_text": "Needs to use an aid or appliance to manage medication", "points": 1},
+    {"activity_number": 3, "activity_name": "Managing therapy or monitoring a health condition", "category": "daily_living", "descriptor_letter": "c", "descriptor_text": "Needs prompting to take medication or monitor a health condition", "points": 2},
+    {"activity_number": 3, "activity_name": "Managing therapy or monitoring a health condition", "category": "daily_living", "descriptor_letter": "f", "descriptor_text": "Cannot manage medication or therapy or monitor health condition even with supervision", "points": 8},
+
+    {"activity_number": 4, "activity_name": "Washing and bathing", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can wash and bathe unaided", "points": 0},
+    {"activity_number": 4, "activity_name": "Washing and bathing", "category": "daily_living", "descriptor_letter": "c", "descriptor_text": "Needs supervision or prompting to wash or bathe", "points": 2},
+    {"activity_number": 4, "activity_name": "Washing and bathing", "category": "daily_living", "descriptor_letter": "e", "descriptor_text": "Needs assistance to wash their body between the waist and neck", "points": 4},
+    {"activity_number": 4, "activity_name": "Washing and bathing", "category": "daily_living", "descriptor_letter": "f", "descriptor_text": "Cannot wash and bathe at all and needs another person to wash entire body", "points": 8},
+
+    {"activity_number": 5, "activity_name": "Managing toilet needs or incontinence", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can manage toilet needs or incontinence unaided", "points": 0},
+    {"activity_number": 5, "activity_name": "Managing toilet needs or incontinence", "category": "daily_living", "descriptor_letter": "d", "descriptor_text": "Needs assistance to manage toilet needs", "points": 4},
+    {"activity_number": 5, "activity_name": "Managing toilet needs or incontinence", "category": "daily_living", "descriptor_letter": "e", "descriptor_text": "Needs assistance to manage incontinence of either bladder or bowel", "points": 6},
+
+    {"activity_number": 6, "activity_name": "Dressing and undressing", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can dress and undress unaided", "points": 0},
+    {"activity_number": 6, "activity_name": "Dressing and undressing", "category": "daily_living", "descriptor_letter": "b", "descriptor_text": "Needs to use an aid or appliance to dress or undress", "points": 2},
+    {"activity_number": 6, "activity_name": "Dressing and undressing", "category": "daily_living", "descriptor_letter": "d", "descriptor_text": "Needs assistance to dress or undress lower body", "points": 4},
+
+    {"activity_number": 7, "activity_name": "Communicating verbally", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can express and understand verbal information unaided", "points": 0},
+    {"activity_number": 7, "activity_name": "Communicating verbally", "category": "daily_living", "descriptor_letter": "d", "descriptor_text": "Needs an aid or appliance and prompting to express or understand verbal information", "points": 8},
+
+    {"activity_number": 8, "activity_name": "Reading and understanding signs, symbols and words", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can read and understand basic and complex written information unaided", "points": 0},
+    {"activity_number": 8, "activity_name": "Reading and understanding signs, symbols and words", "category": "daily_living", "descriptor_letter": "c", "descriptor_text": "Needs prompting to read or understand complex written information", "points": 4},
+
+    {"activity_number": 9, "activity_name": "Engaging with other people face to face", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can engage with other people unaided", "points": 0},
+    {"activity_number": 9, "activity_name": "Engaging with other people face to face", "category": "daily_living", "descriptor_letter": "b", "descriptor_text": "Needs prompting to engage with other people", "points": 2},
+    {"activity_number": 9, "activity_name": "Engaging with other people face to face", "category": "daily_living", "descriptor_letter": "c", "descriptor_text": "Needs social support to engage with other people", "points": 4},
+    {"activity_number": 9, "activity_name": "Engaging with other people face to face", "category": "daily_living", "descriptor_letter": "d", "descriptor_text": "Cannot engage with other people due to such engagement causing overwhelming psychological distress", "points": 8},
+
+    {"activity_number": 10, "activity_name": "Making budgeting decisions", "category": "daily_living", "descriptor_letter": "a", "descriptor_text": "Can manage complex budgeting decisions unaided", "points": 0},
+    {"activity_number": 10, "activity_name": "Making budgeting decisions", "category": "daily_living", "descriptor_letter": "c", "descriptor_text": "Needs assistance to make complex budgeting decisions", "points": 4},
+    {"activity_number": 10, "activity_name": "Making budgeting decisions", "category": "daily_living", "descriptor_letter": "d", "descriptor_text": "Cannot make any budgeting decisions at all", "points": 6},
+
+    {"activity_number": 11, "activity_name": "Planning and following journeys", "category": "mobility", "descriptor_letter": "a", "descriptor_text": "Can plan and follow the route of a journey unaided", "points": 0},
+    {"activity_number": 11, "activity_name": "Planning and following journeys", "category": "mobility", "descriptor_letter": "b", "descriptor_text": "Needs prompting to undertake any journey to avoid overwhelming psychological distress", "points": 4},
+    {"activity_number": 11, "activity_name": "Planning and following journeys", "category": "mobility", "descriptor_letter": "c", "descriptor_text": "Cannot plan the route of a journey", "points": 8},
+    {"activity_number": 11, "activity_name": "Planning and following journeys", "category": "mobility", "descriptor_letter": "d", "descriptor_text": "Cannot follow the route of an unfamiliar journey without another person", "points": 10},
+    {"activity_number": 11, "activity_name": "Planning and following journeys", "category": "mobility", "descriptor_letter": "f", "descriptor_text": "Cannot undertake any journey because it would cause overwhelming psychological distress", "points": 12},
+
+    {"activity_number": 12, "activity_name": "Moving around", "category": "mobility", "descriptor_letter": "a", "descriptor_text": "Can stand and then move more than 200 metres either aided or unaided", "points": 0},
+    {"activity_number": 12, "activity_name": "Moving around", "category": "mobility", "descriptor_letter": "b", "descriptor_text": "Can stand and then move more than 50 metres but no more than 200 metres either aided or unaided", "points": 4},
+    {"activity_number": 12, "activity_name": "Moving around", "category": "mobility", "descriptor_letter": "c", "descriptor_text": "Can stand and then move unaided more than 20 metres but no more than 50 metres", "points": 8},
+    {"activity_number": 12, "activity_name": "Moving around", "category": "mobility", "descriptor_letter": "d", "descriptor_text": "Can stand and then move using an aid or appliance more than 20 metres but no more than 50 metres", "points": 10},
+    {"activity_number": 12, "activity_name": "Moving around", "category": "mobility", "descriptor_letter": "e", "descriptor_text": "Can stand and then move more than 1 metre but no more than 20 metres either aided or unaided", "points": 12},
+    {"activity_number": 12, "activity_name": "Moving around", "category": "mobility", "descriptor_letter": "f", "descriptor_text": "Cannot either aided or unaided stand or move more than 1 metre", "points": 12}
+  ]
+}

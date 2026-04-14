@@ -1,0 +1,159 @@
+{
+  "claims": [
+    {
+      "id": "PIP-202501-A7F23",
+      "claimant_name": "Emma Richards",
+      "claimant_email": "e.richards@email.co.uk",
+      "date_of_birth": "1985-03-14",
+      "claim_type": "new_claim",
+      "status": "assessment",
+      "risk_level": "high",
+      "assigned_to": "j.patel",
+      "primary_condition": "Multiple sclerosis (relapsing-remitting)",
+      "additional_conditions": "Chronic fatigue, depression",
+      "medication": "Tecfidera 240mg twice daily, Amitriptyline 25mg at night, Modafinil 200mg morning",
+      "created_at": "2025-01-20T10:00:00",
+      "target_date": "2025-04-05T10:00:00",
+      "notes": [
+        {"author": "j.patel", "content": "New PIP claim received. Claimant diagnosed with RRMS in 2022. Reports significant fatigue affecting daily activities. Currently working part-time (15 hrs/week) but struggling. PIP2 form describes difficulty with food preparation, bathing, and mobility on bad days.", "created_at": "2025-01-20T10:30:00"},
+        {"author": "j.patel", "content": "GP letter received from Dr Kaur at Riverside Surgery. Confirms MS diagnosis, fatigue severity rated 7/10 most days. States patient has unpredictable relapses lasting 2-6 weeks where mobility is severely affected. Recommends enhanced mobility component.", "created_at": "2025-01-28T14:00:00"},
+        {"author": "j.patel", "content": "Neurologist report from Dr Shah at Royal Manchester. Details cognitive fatigue, bilateral leg weakness during relapses, and bladder urgency. MRI shows active lesions. Report supports substantial daily living needs.", "created_at": "2025-02-10T11:15:00"},
+        {"author": "m.khan", "content": "Case review: strong medical evidence. Fluctuating condition makes scoring complex — need to assess on worst days per PIP guidance. Approaching 75-day SLA. Prioritise for assessment this week.", "created_at": "2025-03-15T09:00:00"}
+      ],
+      "evidence": [
+        {"document_type": "PIP2 questionnaire", "description": "Completed, 18 pages with additional sheets", "received": true, "received_at": "2025-01-20T10:00:00"},
+        {"document_type": "GP/Medical letter", "description": "Dr Kaur, Riverside Surgery — confirms MS, fatigue 7/10", "received": true, "received_at": "2025-01-28T14:00:00"},
+        {"document_type": "Specialist report", "description": "Dr Shah, Neurology, Royal Manchester Infirmary", "received": true, "received_at": "2025-02-10T11:15:00"},
+        {"document_type": "ID document", "description": "UK passport", "received": true, "received_at": "2025-01-20T10:00:00"},
+        {"document_type": "Medication evidence", "description": "Repeat prescription printout — OUTSTANDING", "received": false}
+      ]
+    },
+    {
+      "id": "PIP-202502-B3K91",
+      "claimant_name": "Michael Okafor",
+      "claimant_email": "m.okafor@email.co.uk",
+      "date_of_birth": "1978-11-02",
+      "claim_type": "new_claim",
+      "status": "evidence_gathering",
+      "risk_level": "medium",
+      "assigned_to": "r.singh",
+      "primary_condition": "Severe anxiety disorder with agoraphobia",
+      "additional_conditions": "PTSD, insomnia",
+      "medication": "Sertraline 150mg daily, Propranolol 40mg as needed, Zopiclone 7.5mg at night",
+      "created_at": "2025-02-15T09:00:00",
+      "target_date": "2025-05-01T09:00:00",
+      "notes": [
+        {"author": "r.singh", "content": "New claim. Claimant is a former security officer who developed PTSD and severe anxiety following a workplace assault in 2023. Cannot leave home unaccompanied. Reports panic attacks 3-4 times per week. PIP2 describes inability to plan journeys, engage with others, or manage finances independently.", "created_at": "2025-02-15T09:30:00"},
+        {"author": "r.singh", "content": "Community Mental Health Team letter received. Confirms severe agoraphobia — claimant has not left home alone since August 2024. Attending CBT via video calls. Team assesses him as having substantial care needs.", "created_at": "2025-03-01T10:00:00"}
+      ],
+      "evidence": [
+        {"document_type": "PIP2 questionnaire", "description": "Completed with help from support worker", "received": true, "received_at": "2025-02-15T09:00:00"},
+        {"document_type": "GP/Medical letter", "description": "Requested from Dr Mensah — OUTSTANDING", "received": false},
+        {"document_type": "Specialist report", "description": "CMHT assessment letter", "received": true, "received_at": "2025-03-01T10:00:00"},
+        {"document_type": "ID document", "description": "Driving licence (surrendered)", "received": true, "received_at": "2025-02-15T09:00:00"},
+        {"document_type": "Supporting document", "description": "Support worker statement — OUTSTANDING", "received": false}
+      ]
+    },
+    {
+      "id": "PIP-202501-C2D56",
+      "claimant_name": "Patricia Brennan",
+      "claimant_email": "p.brennan@email.co.uk",
+      "date_of_birth": "1960-07-22",
+      "claim_type": "reassessment",
+      "status": "assessment",
+      "risk_level": "low",
+      "assigned_to": "j.patel",
+      "primary_condition": "Osteoarthritis (both knees and hips)",
+      "additional_conditions": "Type 2 diabetes, hypertension",
+      "medication": "Metformin 1000mg twice daily, Naproxen 500mg twice daily, Amlodipine 10mg, Co-codamol as needed",
+      "created_at": "2025-01-08T11:00:00",
+      "target_date": "2025-03-24T11:00:00",
+      "notes": [
+        {"author": "j.patel", "content": "Reassessment — existing award expiring April 2025. Currently on standard daily living + standard mobility. Condition has worsened per claimant. Now uses walking frame indoors and wheelchair for distances over 20 metres.", "created_at": "2025-01-08T11:30:00"},
+        {"author": "j.patel", "content": "Orthopaedic report confirms bilateral knee replacement deferred due to diabetes management. Mobility significantly reduced since last assessment. GP confirms pain level 8/10 on most days.", "created_at": "2025-01-22T15:00:00"},
+        {"author": "j.patel", "content": "All evidence received. Straightforward reassessment — condition clearly deteriorated. Recommending upgrade to enhanced mobility based on 20m walking distance with aids.", "created_at": "2025-02-05T09:00:00"}
+      ],
+      "evidence": [
+        {"document_type": "PIP2 questionnaire", "description": "Completed by claimant with daughter's help", "received": true, "received_at": "2025-01-08T11:00:00"},
+        {"document_type": "GP/Medical letter", "description": "Dr Williams — pain management and diabetes", "received": true, "received_at": "2025-01-22T15:00:00"},
+        {"document_type": "Specialist report", "description": "Mr Ahmed, Orthopaedic consultant", "received": true, "received_at": "2025-01-22T15:00:00"},
+        {"document_type": "ID document", "description": "UK passport", "received": true, "received_at": "2025-01-08T11:00:00"},
+        {"document_type": "Previous PIP award letter", "description": "Current award details for comparison", "received": true, "received_at": "2025-01-08T11:00:00"}
+      ]
+    },
+    {
+      "id": "PIP-202503-D8E44",
+      "claimant_name": "Ryan Cooper",
+      "date_of_birth": "1998-05-30",
+      "claim_type": "new_claim",
+      "status": "submitted",
+      "risk_level": "medium",
+      "assigned_to": "r.singh",
+      "primary_condition": "Autism spectrum condition (Level 2)",
+      "additional_conditions": "ADHD, sensory processing difficulties",
+      "medication": "Methylphenidate 36mg morning, Melatonin 4mg at night",
+      "created_at": "2025-03-10T08:30:00",
+      "target_date": "2025-05-24T08:30:00",
+      "notes": [
+        {"author": "r.singh", "content": "New claim from young adult. Diagnosed age 16, recently reassessed as Level 2 ASC. Lives with parents. Struggles significantly with social communication, managing finances, and planning journeys. Mother reports he cannot safely cook, frequently forgets medication, and becomes extremely distressed in unfamiliar environments.", "created_at": "2025-03-10T09:00:00"}
+      ],
+      "evidence": [
+        {"document_type": "PIP2 questionnaire", "description": "Completed by mother as appointed person", "received": true, "received_at": "2025-03-10T08:30:00"},
+        {"document_type": "Specialist report", "description": "Diagnostic report from Dr Lim, Adult Autism Service — OUTSTANDING", "received": false},
+        {"document_type": "GP/Medical letter", "description": "Requested — OUTSTANDING", "received": false},
+        {"document_type": "ID document", "description": "Provisional driving licence", "received": true, "received_at": "2025-03-10T08:30:00"},
+        {"document_type": "Supporting document", "description": "Mother's supporting statement — OUTSTANDING", "received": false}
+      ]
+    },
+    {
+      "id": "PIP-202502-E1F78",
+      "claimant_name": "Fatima Al-Hassan",
+      "claimant_email": "f.alhassan@email.co.uk",
+      "date_of_birth": "1990-01-15",
+      "claim_type": "mandatory_reconsideration",
+      "status": "under_review",
+      "risk_level": "high",
+      "assigned_to": "j.patel",
+      "primary_condition": "Fibromyalgia",
+      "additional_conditions": "Chronic fatigue syndrome, IBS, depression",
+      "medication": "Pregabalin 300mg twice daily, Duloxetine 60mg, Tramadol 50mg as needed, Omeprazole 20mg",
+      "created_at": "2025-02-01T14:00:00",
+      "target_date": "2025-04-17T14:00:00",
+      "notes": [
+        {"author": "j.patel", "content": "Mandatory reconsideration requested. Original decision: 4 points daily living (standard not met), 0 mobility. Claimant disputes — says assessor did not account for fluctuating nature of fibromyalgia and that face-to-face assessment was on a 'good day'. Original report noted claimant 'appeared comfortable' but claimant states she was masking severe pain.", "created_at": "2025-02-01T14:30:00"},
+        {"author": "j.patel", "content": "New evidence submitted: pain diary covering 3 months, rheumatology letter stating flare-ups occur 15-20 days per month with severe fatigue and pain. Letter explicitly states claimant's function on assessment day was not representative.", "created_at": "2025-02-14T10:00:00"},
+        {"author": "m.khan", "content": "MR review: original assessment appears to have underscored. New rheumatology evidence is compelling. Fibromyalgia fluctuation not adequately captured. Recommend full rescoring with 'bad day' descriptors. This is a common appeal pattern — 65% of PIP tribunals overturn the DWP decision.", "created_at": "2025-03-01T11:00:00"}
+      ],
+      "evidence": [
+        {"document_type": "PIP2 questionnaire", "description": "Original submission", "received": true, "received_at": "2024-10-15T09:00:00"},
+        {"document_type": "Original assessment report", "description": "Face-to-face assessment — disputed", "received": true, "received_at": "2024-12-01T10:00:00"},
+        {"document_type": "Specialist report", "description": "Dr Chen, Rheumatology — new evidence for MR", "received": true, "received_at": "2025-02-14T10:00:00"},
+        {"document_type": "Supporting document", "description": "3-month pain diary", "received": true, "received_at": "2025-02-14T10:00:00"},
+        {"document_type": "GP/Medical letter", "description": "Dr Patel, confirming medication and impact", "received": true, "received_at": "2025-02-14T10:00:00"}
+      ]
+    },
+    {
+      "id": "PIP-202503-F4G12",
+      "claimant_name": "Thomas Walker",
+      "date_of_birth": "1972-09-08",
+      "claim_type": "new_claim",
+      "status": "submitted",
+      "risk_level": "low",
+      "assigned_to": null,
+      "primary_condition": "Lower back injury (L4/L5 disc herniation)",
+      "additional_conditions": "Sciatica, anxiety",
+      "medication": "Naproxen 500mg, Amitriptyline 10mg, Diazepam 2mg as needed",
+      "created_at": "2025-03-25T16:00:00",
+      "target_date": "2025-06-08T16:00:00",
+      "notes": [
+        {"author": "system", "content": "Claim submitted via online portal. Documents uploaded: PIP2 form, GP letter, MRI report scan. Awaiting caseworker assignment.", "created_at": "2025-03-25T16:00:00"}
+      ],
+      "evidence": [
+        {"document_type": "PIP2 questionnaire", "description": "Submitted online", "received": true, "received_at": "2025-03-25T16:00:00"},
+        {"document_type": "GP/Medical letter", "description": "Dr Jones, confirming disc herniation and pain management", "received": true, "received_at": "2025-03-25T16:00:00"},
+        {"document_type": "Specialist report", "description": "MRI report scan uploaded", "received": true, "received_at": "2025-03-25T16:00:00"},
+        {"document_type": "ID document", "description": "Not yet provided — OUTSTANDING", "received": false}
+      ]
+    }
+  ]
+}
