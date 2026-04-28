@@ -20,21 +20,80 @@ Information is scattered across email inboxes, maintenance logs, and sensor dash
 
 ### Architecture snapshot (read this first)
 
-```
-React 18 + Vite + Tailwind (GOV.UK styling)
-        │ REST / SSE
-        ▼
-FastAPI (Python 3.12)
-- Stateless
-- SQLAlchemy 2
-        │ SQL
-        ▼
-PostgreSQL 16 (SQLite in tests)
+GitHub renders the Mermaid diagram below as a real flow chart. Every box maps to a real file or folder so you can navigate straight from this picture into the code.
 
-        ▼
-Claude Haiku 4.5
-(+ deterministic mock fallback)
+```mermaid
+flowchart TB
+    %% ─── Personas ───
+    P1([Parent / Staff]):::persona
+    P2([School Facilities Manager]):::persona
+    P3([DfE Delivery Manager]):::persona
+
+    %% ─── Frontend ───
+    subgraph FE["FRONTEND  ·  React 18 · Vite · Tailwind · GOV.UK"]
+        direction LR
+        FE_PUB["ApplicantPortal<br/>UploadPortal<br/>AirQualityIntake"]
+        FE_CW["CaseQueue<br/>CaseDetail<br/>(AI brief + Q&amp;A)"]
+        FE_LD["RiskDashboard<br/>SchoolsAirQuality<br/>(cases ↔ sensors)"]
+        FE_API["api.js — fetch + SSE"]
+    end
+
+    %% ─── API ───
+    subgraph API["API LAYER  ·  FastAPI · Python 3.12"]
+        direction TB
+        API_MAIN["main.py — app, CORS, lifespan<br/>(seeds DB + builds RAG index)"]
+        API_R1["routes/cases.py<br/>routes/air_quality.py<br/>routes/upload.py<br/>routes/school_air_quality.py"]
+        API_R2["routes/ai.py<br/>POST /ai/cases/{id}/summarise<br/>GET&nbsp;&nbsp;/ai/cases/{id}/ask/stream (SSE)"]
+        API_MAIN --- API_R1
+        API_MAIN --- API_R2
+    end
+
+    %% ─── Domain services ───
+    subgraph DOM["DOMAIN SERVICES  ·  pure Python"]
+        DOM1["risk.py<br/>reminder / escalation flag"]
+        DOM2["recommendations.py<br/>rules → AQ next actions"]
+        DOM3["school_air_quality.py<br/>RAG bands · trend · certainty"]
+        DOM4["seed_data.py · models.py · schemas.py<br/>SQLAlchemy 2 · Pydantic v2"]
+    end
+
+    %% ─── AI / RAG ───
+    subgraph AI["AI / RAG"]
+        RAG["rag.py<br/>BM25 over markdown KB<br/>(in-memory, sub-ms)"]
+        PIPE["ai_pipeline.py<br/>live → Claude Haiku 4.5<br/>mock → deterministic quoter<br/>(same response shape)"]
+        RAG -- "top-K chunks" --> PIPE
+    end
+
+    %% ─── Persistence + External ───
+    DB[("PostgreSQL 16  (SQLite in tests)<br/>cases · case_timeline · notes<br/>policies · workflow_states · users")]:::store
+    EXT["api.anthropic.com<br/>Claude Haiku 4.5<br/>(only when ANTHROPIC_API_KEY is set)"]:::ext
+
+    %% ─── Seed + RAG corpus ───
+    SEED[("SEED + RAG CORPUS · data/<br/>cases.json (20) · policy-extracts.json (15)<br/>workflow-states.json<br/>mock_school_air_quality.json (5×36×8)<br/>knowledge_base/*.md (5 docs · 28 chunks)")]:::store
+
+    %% ─── Wiring ───
+    P1 --> FE
+    P2 --> FE
+    P3 --> FE
+    FE -- "REST (JSON) + SSE" --> API
+    API --> DOM
+    API --> AI
+    DOM -- "SQL" --> DB
+    PIPE -- "HTTPS (live only)" --> EXT
+    SEED -- "seed at startup<br/>(seed_data.py)" --> DB
+    SEED -- "index at startup<br/>(rag.py)" --> RAG
+
+    classDef persona fill:#e3f2fd,stroke:#1565c0,color:#0d47a1;
+    classDef store fill:#fff3e0,stroke:#e65100,color:#bf360c;
+    classDef ext fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c;
 ```
+
+If your viewer doesn't render Mermaid, the same picture in one paragraph:
+
+> **Personas** (parents/staff · facilities · DfE) hit the **Frontend** (React+Vite, GOV.UK) which calls the **API** (FastAPI) over REST + SSE. The API splits two ways: **Domain services** (`risk`, `recommendations`, `school_air_quality`, `models`, `schemas`) read/write **Postgres**; the **AI/RAG** path runs `rag.py` (BM25 over markdown KB) and `ai_pipeline.py` (live → Claude Haiku 4.5, mock → deterministic quoter). At lifespan startup, `data/` JSON seeds Postgres and `data/knowledge_base/*.md` is indexed into BM25.
+
+**Two invariants worth remembering:**
+1. **The AI path is dual-mode.** Both branches return the same response shape with the same `chunks` array — the UI cannot tell live from mock except via the badge at `/`. This is what makes the demo work offline.
+2. **Seed data is the source of truth at boot.** The Postgres tables are derived from `data/*.json` on lifespan startup; `knowledge_base/*.md` is loaded into an in-memory BM25 index. To reset, drop the Docker volume and restart.
 
 ### Three user surfaces
 
