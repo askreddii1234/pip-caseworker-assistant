@@ -114,6 +114,145 @@ Retrieval is BM25 over a curated knowledge base (BB101, WHO AQG 2021, CIBSE TM21
 
 ---
 
+## Data models
+
+Postgres holds six tables. A case fans out to timeline events and free-text notes; policies and workflow states are reference tables joined by `case_type`; users are isolated. Two extra entities (KB document, KB chunk) live in memory for the RAG layer and are not persisted.
+
+### Entity relationship
+
+```mermaid
+erDiagram
+    CASES ||--o{ CASE_TIMELINE : "has events"
+    CASES ||--o{ CASEWORKER_NOTES : "has notes"
+    CASES }o--|| WORKFLOW_STATES : "current status"
+    CASES }o--o{ POLICIES : "applicable_case_types"
+    USERS ||..o{ CASES : "assigned_to (loose)"
+
+    CASES {
+        string case_id PK
+        string case_type "benefit_review | licence_application | compliance_check | air_quality_concern"
+        string status "FK → WORKFLOW_STATES.state"
+        string applicant_name
+        string applicant_reference
+        string applicant_dob
+        string assigned_to "→ USERS.username (loose)"
+        string created_date
+        string last_updated
+        text   case_notes
+        text   ai_summary
+        string severity_level "Low | Medium | High | Critical"
+        boolean is_urgent
+        json   submission_payload "8-section AQ intake (JSONB)"
+    }
+    CASE_TIMELINE {
+        int    id PK
+        string case_id FK
+        string date
+        string event "evidence_requested | note_added | status_changed | ..."
+        text   note
+    }
+    CASEWORKER_NOTES {
+        int      id PK
+        string   case_id FK
+        string   author
+        text     content
+        datetime created_at
+    }
+    POLICIES {
+        string policy_id PK
+        string title
+        json   applicable_case_types "list[case_type]"
+        text   body
+    }
+    WORKFLOW_STATES {
+        int    id PK
+        string case_type
+        string state
+        string label
+        text   description
+        json   allowed_transitions "list[state]"
+        json   required_actions "list[str]"
+        int    reminder_days "nullable"
+        int    escalation_days "nullable"
+    }
+    USERS {
+        int    id PK
+        string username UK
+        string full_name
+        string role "caseworker | team_leader"
+        string hashed_password
+    }
+```
+
+### In-memory RAG entities
+
+| Entity | Source | Key fields |
+|--------|--------|------------|
+| **KB Document** | YAML frontmatter in `data/knowledge_base/*.md` | `doc_id`, `title`, `publisher`, `year`, `url` |
+| **KB Chunk** | Markdown sections (`##` heading boundaries) | `chunk_id`, `doc_id`, `heading`, `text`, BM25 token vector |
+
+Both are rebuilt from disk every time the FastAPI app boots (`rag.py` runs in the lifespan handler).
+
+### `submission_payload` shape (air_quality_concern)
+
+JSONB field on `cases`. Captures the 8-section AQ intake without polluting the table schema. `severity_level` and `is_urgent` are duplicated as top-level columns so the dashboard / risk queries don't need JSON path operators.
+
+```jsonc
+{
+  "submitter":    { "name": "...", "role": "parent | teacher | student | staff", "contact": "..." },
+  "location":     { "school_name": "...", "school_urn": "138422", "room": "..." },
+  "incident":     { "type": "mould | chemical | ventilation | pollutant | other",
+                    "first_noticed": "2026-04-12", "ongoing": true },
+  "exposure":     { "people_affected": 8, "vulnerable_groups": ["asthmatic"], "duration_hours": 4 },
+  "observations": { "smell": "...", "visible": "...", "symptoms": ["headache", "cough"] },
+  "severity":     { "level": "Critical", "urgency_flag": true },
+  "history":      { "prior_reports": ["CASE-2026-00301"], "recurrence_count": 3 },
+  "attachments":  [{ "filename": "...", "content_type": "...", "size_bytes": 0 }]
+}
+```
+
+### Workflow state machine
+
+Defined in `data/workflow-states.json`, loaded into `workflow_states` at startup. Per-type reminder/escalation thresholds drive `risk.py`:
+
+| Case type | Reminder | Escalation |
+|-----------|----------|------------|
+| `benefit_review` | 28 d | 56 d |
+| `licence_application` | 21 d | 42 d |
+| `compliance_check` | 14 d | 28 d |
+| **`air_quality_concern`** | **3 d** | **7 d** |
+
+Shared lifecycle: `case_created → awaiting_evidence → under_review → pending_decision → closed`, with `escalated` as a branch. `allowed_transitions` and `required_actions` are per-type.
+
+### Sensor dataset shape (`mock_school_air_quality.json`)
+
+```jsonc
+{
+  "schools": [
+    {
+      "urn": "138422",
+      "name": "Greenfield Primary",
+      "region": "South West",
+      "readings": [
+        {
+          "month": "2024-01",
+          "co2_ppm": 1200, "pm25_ugm3": 14, "pm10_ugm3": 22,
+          "no2_ugm3": 35,  "tvoc_ugm3": 410,
+          "temperature_c": 19.2, "humidity_pct": 58,
+          "occupancy_pct": 92
+        }
+        // ...36 months
+      ]
+    }
+    // ...5 schools
+  ]
+}
+```
+
+Threshold authority and RAG band cutoffs live in `data/DATA_SPEC.md` (CIBSE TM21 / BB101, WHO AQG 2021, UK NAQS).
+
+---
+
 ## Key features
 
 ### Crowdsourced case management
@@ -459,6 +598,36 @@ Or manually:
 | Stream response is blank | Browser/extension stripping `text/event-stream` | Try the curl example above to isolate; check network tab for SSE frames |
 | CORS error in browser | `ALLOWED_ORIGINS` doesn't include your frontend URL | Add `http://localhost:5173` (Vite dev) to the env var |
 | `pytest` fails on import | Virtualenv not activated | `source backend/.venv/bin/activate` |
+
+---
+
+## Why this matters
+
+This prototype shows how government services can move from fragmented reporting and reactive maintenance to a joined-up, evidence-led case management platform that improves:
+
+- **Student wellbeing** — early action on indoor-air-quality risks that affect health and learning outcomes
+- **Operational response times** — caseworkers see everything they need on one screen, with policy and risk pre-computed
+- **Transparency for parents and staff** — applicant portal and sensor dashboard surface real status, not just a ticket number
+- **Smarter funding decisions** — DfE Delivery Managers can evidence patterns across their portfolio, not anecdote
+- **Early intervention** — risk thresholds and recurrence flags catch issues before they escalate
+
+---
+
+## Future enhancements
+
+| Theme | Item | What it unlocks |
+|-------|------|-----------------|
+| Sensors | **Live IoT sensor streaming** (MQTT / time-series ingest replacing JSON snapshot) | Real-time alerts; minute-level data for incident review |
+| Spatial | **GIS map of school risks** (Leaflet / Mapbox over school URNs) | Pattern detection by region, ward, or local authority |
+| Workflow | **Automated escalation workflows** (rule-driven state transitions) | Less manual triage, fully audit-friendly handoffs |
+| Comms | **Email / Microsoft Teams / SMS notifications** with per-stakeholder templates | Closes the loop with applicants and assignees without manual chasing |
+| Mobile | **Mobile reporting app** (PWA or native iOS/Android) | On-site capture with photo + GPS; parent-friendly status checks |
+| ML | **Predictive risk modelling** (XGBoost / time-series) over case + sensor history | Forecast which schools will breach thresholds next term |
+| Integration | **Multi-agency collaboration workflows** (DfE ↔ NHS ↔ HSE ↔ local authority) | Joint cases, shared evidence, cross-portfolio reporting |
+| Auth | OAuth / SSO with role-aware row-level access | Production-grade per-team data isolation |
+| RAG | Persistent vector store (`pgvector` / Chroma) + hybrid lexical+semantic search | Larger KB, better recall on synonym-heavy queries |
+| Ops | Structured logging + metrics + tracing (OpenTelemetry, Prometheus, Grafana) | SLO-driven operations, incident replay |
+| Data | Data lineage + retention policy for case attachments | GDPR-aligned operations and FOIA response |
 
 ---
 
