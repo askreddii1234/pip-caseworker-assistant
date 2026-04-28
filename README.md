@@ -1,152 +1,111 @@
 # School Air Quality Tracker
 
-Prototype for **Challenge 3: Supporting casework decisions** — Version 1 AI Engineering Lab Hackathon, April 2026.
+A platform for monitoring, reporting, and managing air quality concerns in UK schools — combining crowdsourced case reports from parents and staff with administrative sensor data from SAMHE-compatible monitors.
 
-A casework decision-support tool focused on **school air quality** alongside three other case types. Surfaces what's known, what's missing, and what guidance applies — with retrieval-augmented AI answers that cite their sources.
+Built as a prototype for the **Version 1 AI Engineering Lab Hackathon, April 2026**.
 
-> The repository directory is `pip-caseworker-assistant/` for historical reasons. The project pivoted from PIP-specific scope to a multi-case-type tool with a strong school-air-quality slant.
-
----
-
-## What it does
-
-Five user surfaces:
-
-| # | Audience | Surface |
-|---|----------|---------|
-| 1 | Public / generic intake | Submit a case (benefit review · licence application · compliance check) |
-| 2 | Schools / parents / staff | **8-section air quality concern intake** with severity routing |
-| 3 | Caseworker | Single case view: timeline, workflow position, applicable policy, risk flag, AI brief + Q&A grounded in retrieved guidance |
-| 4 | Team leader | Risk dashboard — escalation/reminder backlog plus an air-quality slice (severity, schools, workload, high-risk schools) |
-| 5 | Parents / public | **Schools sensor dashboard** — 5 schools × 36 months SAMHE-style monitor data, cross-linked to live air-quality cases |
+> The repository directory is `pip-caseworker-assistant/` for historical reasons. The project pivoted from PIP-specific scope to a school-air-quality casework tool.
 
 ---
 
-## Architecture
+## Problem
+
+Poor air quality in school buildings — mould, inadequate ventilation, high CO₂, chemical smells — has a measurable impact on pupil health and learning outcomes. But there is no joined-up system for:
+
+- **Parents and staff** to report concerns and track what's being done
+- **School facilities managers** to triage, assign, and resolve cases
+- **DfE School Delivery Managers** to spot patterns across their portfolio and evidence funding needs
+
+Information is scattered across email inboxes, maintenance logs, and sensor dashboards with no connection between them.
+
+---
+
+## Solution
+
+### Architecture snapshot (read this first)
 
 ```
-                            BROWSER
-                ┌──────────────────────────────┐
-                │  React 18 + Tailwind         │
-                │  GOV.UK design language      │
-                │  ─────────────────────────   │
-                │  CaseQueue · CaseDetail      │
-                │  AirQualityIntake            │
-                │  SchoolsAirQuality           │
-                │  RiskDashboard · Portal      │
-                └──────────────┬───────────────┘
-                               │ HTTP + SSE
-                               ▼
-   ┌────────────────────────────────────────────────────────┐
-   │  FastAPI (Python 3.12)                                 │
-   │  ─────────────────────────────────────────────────────  │
-   │  routes/cases.py            — list, detail, dashboard  │
-   │  routes/air_quality.py      — POST /cases/air-quality  │
-   │  routes/school_air_quality  — sensor dashboard         │
-   │  routes/ai.py               — summarise, ask/stream    │
-   │  routes/upload.py           — generic intake           │
-   │                                                        │
-   │  rag.py        — BM25 over data/knowledge_base/*.md ───┐│
-   │  ai_pipeline   — Claude (live) / deterministic (mock) ││
-   │  risk.py       — reminder / escalation thresholds     ││
-   │  recommendations — rules engine for AQ cases          ││
-   └────────────────┬───────────────────────────────┬──────┘│
-                    │                               │       │
-                    ▼                               ▼       │
-        ┌────────────────────┐         ┌─────────────────────┴──┐
-        │  PostgreSQL 16     │         │  data/                  │
-        │  cases · timeline  │         │  ├─ cases.json          │
-        │  notes · policies  │         │  ├─ policy-extracts.json│
-        │  workflow_states   │         │  ├─ workflow-states.json│
-        │  users             │         │  ├─ mock_school_air…    │
-        └────────────────────┘         │  └─ knowledge_base/*.md │
-                                       │     (RAG corpus)        │
-                                       └─────────────────────────┘
+React 18 + Vite + Tailwind (GOV.UK styling)
+        │ REST / SSE
+        ▼
+FastAPI (Python 3.12)
+- Stateless
+- SQLAlchemy 2
+        │ SQL
+        ▼
+PostgreSQL 16 (SQLite in tests)
+
+        ▼
+Claude Haiku 4.5
+(+ deterministic mock fallback)
 ```
 
-**Stack** — FastAPI · PostgreSQL 16 · React 18 + Tailwind · Anthropic Claude Haiku 4.5 (live) or deterministic mock (default) · Docker Compose · BM25 retrieval (`rank-bm25`).
+### Three user surfaces
+
+1. **Reporting Portal** — parents, teachers, and students submit air quality concern cases with evidence.
+2. **Caseworker View** — school facilities managers see all open cases with timelines, workflow states, and required actions.
+3. **Portfolio Dashboard** — DfE Delivery Managers view aggregated risk, trends, and unresolved issues across schools.
+
+### AI layer
+
+Optional AI assistant (Claude or deterministic mock mode) can:
+
+- Summarise complex case histories
+- Recommend next actions
+- Compare against policies and thresholds
+- Answer natural-language questions about cases, with `[KB-N]` citations to the underlying guidance
+
+Retrieval is BM25 over a curated knowledge base (BB101, WHO AQG 2021, CIBSE TM21, HSE COSHH, SAMHE) — runs in both live and mock modes, so the demo works fully offline.
 
 ---
 
-## Domain model
+## Key features
 
-### Case types
+### Crowdsourced case management
+- Community reporting by parents, teachers, and students
+- Case lifecycle: `case_created → awaiting_evidence → under_review → pending_decision → closed` (with `escalated` branch)
+- Evidence attachments (photos, medical reports, maintenance records)
+- Automatic flagging when a location has prior reports
 
-Four case types share a common workflow but differ in required actions, allowed transitions, and reminder/escalation thresholds:
+### Administrative sensor data
 
-| Case type | Reminder | Escalation |
-|-----------|----------|------------|
-| `benefit_review` | 28 d | 56 d |
-| `licence_application` | 21 d | 42 d |
-| `compliance_check` | 14 d | 28 d |
-| **`air_quality_concern`** | **3 d** | **7 d** |
+SAMHE-compatible monthly readings:
 
-### Workflow states
+- CO₂
+- PM2.5 / PM10
+- NO₂
+- TVOC
+- Temperature / humidity
 
-Shared: `case_created` → `awaiting_evidence` → `under_review` → `pending_decision` → `closed`, with `escalated` as a branch. Per-type `required_actions` and `allowed_transitions` are defined in `data/workflow-states.json`.
+Capabilities:
 
-### Database schema
+- Threshold scoring against CIBSE / WHO / UK NAQS guidance
+- Seasonal trend analysis
+- School-term context awareness
+- Cross-reference with reported cases from the same school
 
-| Table | Purpose | Key columns |
-|-------|---------|-------------|
-| `cases` | One row per case | `case_id` PK, `case_type`, `status`, `applicant_name`, `assigned_to`, `severity_level` *(AQ)*, `is_urgent` *(AQ)*, `submission_payload` *(JSON, AQ-specific fields)*, `ai_summary` |
-| `case_timeline` | Immutable audit log | `id` PK, `case_id` FK, `date`, `event`, `note` |
-| `caseworker_notes` | Free-text notes added post-seed | `id` PK, `case_id` FK, `author`, `content`, `created_at` |
-| `policies` | Hand-curated policy extracts | `policy_id` PK, `title`, `applicable_case_types[]`, `body` |
-| `workflow_states` | State machine per case type | `(case_type, state)` PK, `label`, `description`, `allowed_transitions[]`, `required_actions[]`, `reminder_days`, `escalation_days` |
-| `users` | Demo accounts | `username` PK, `full_name`, `role`, `hashed_password` |
-
-The RAG layer adds two **logical** entities (Source Document, Chunk) — held in memory rather than database tables. See `docs/RAG_ARCHITECTURE.md` § 4 for the full data model and the upgrade path to persistent vector storage.
-
-### Risk computation
-
-Pure-Python (`backend/risk.py`). For cases in `awaiting_evidence`, compares days since the most recent `evidence_requested` timeline event against the workflow's thresholds. Returns `escalation_due` > `reminder_due` > `ok`.
-
-### Air-quality specifics
-
-- 8-section intake captures submitter, location, incident, exposure, observations, severity, related history, attachments — all fields stored in `cases.submission_payload` (JSONB)
-- Severity routing: `Critical → team_c`, `High → team_b`, else `team_a`
-- `is_urgent = urgency_flag OR severity == Critical`
-- Recommendations engine (`backend/recommendations.py`) keyed on `(issue_category, severity_level)` produces caseworker action lists
-- Sensor dashboard reads `data/mock_school_air_quality.json` (5 schools, 36 months, 8 measures) and applies CIBSE / WHO AQG / UK NAQS thresholds for RAG bands, certainty, trend, and recommended actions
+### DfE portfolio view
+- Aggregated case volumes by school, severity, and region
+- Sensor trend summaries across schools
+- Risk flagging for persistent poor readings
+- Escalation visibility for unresolved serious cases
 
 ---
 
-## Retrieval-Augmented Generation
+## Technology stack
 
-The AI brief and Q&A are grounded in a curated knowledge base. Retrieval uses **BM25** over markdown files with YAML frontmatter — no vector store, no embeddings, sub-millisecond per query.
-
-```
-case context  ─┐
-KB chunks     ─┼─►  Claude (or deterministic mock)  ─►  answer with [KB-N] citations
-question      ─┘
-```
-
-**Knowledge base** (`data/knowledge_base/`, **28 chunks indexed at startup**):
-
-| Doc | Source | Covers |
-|-----|--------|--------|
-| `bb101-ventilation` | DfE Building Bulletin 101 | CO2 thresholds, thermal comfort, mould response |
-| `who-aqg-2021` | WHO Air Quality Guidelines 2021 | PM2.5 / PM10 / NO2 / O3 health-based limits |
-| `cibse-tm21-ventilation` | CIBSE Technical Memorandum | Sensor placement, ventilation strategies, trend reading |
-| `hse-schools-iaq` | HSE / COSHH | Chemical exposure response, RIDDOR, multi-pupil incidents |
-| `samhe-sensor-guidance` | SAMHE programme | Interpreting classroom sensor traces |
-
-Every retrieved chunk carries `doc_id`, `title`, `publisher`, `year`, `url` so the UI can render a Sources panel with clickable provenance. The model is instructed to cite each borrowed claim with a `[KB-N]` marker.
-
-**Mock mode** (no `ANTHROPIC_API_KEY`) still runs retrieval — the deterministic generator quotes the top-1 chunk verbatim, so the demo works fully offline.
-
-Full design + governance discussion: **[`docs/RAG_ARCHITECTURE.md`](docs/RAG_ARCHITECTURE.md)**.
+- **Backend:** FastAPI + PostgreSQL 16 (SQLite in tests)
+- **Frontend:** React 18 + Vite + Tailwind CSS (GOV.UK design language)
+- **AI:** Claude API (Haiku 4.5) with deterministic fallback
+- **Retrieval:** BM25 (`rank-bm25`) over markdown knowledge base
+- **Infrastructure:** Docker Compose
 
 ---
 
-## Quick start (local)
+## Quick start (Docker — recommended)
 
 ```bash
-# Optional — without it, AI runs in deterministic mock mode (still useful for demo)
-cp .env.example .env
-# Edit .env to add ANTHROPIC_API_KEY if you have one
-
+cp .env.example .env          # optional — add ANTHROPIC_API_KEY for live AI
 docker compose up --build
 
 # Frontend:  http://localhost:3000
@@ -154,28 +113,128 @@ docker compose up --build
 # Root:      http://localhost:8000/   (shows ai_mode: live | mocked)
 ```
 
-On startup the backend logs `[rag] indexed 28 knowledge-base chunks` once the corpus is loaded.
+On startup the backend logs `[rag] indexed 28 knowledge-base chunks` once the corpus is loaded. If you don't see this line, retrieval will be empty.
 
-For VM deployment (GCP Compute Engine), see **[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)**.
+### Reset the database
+
+```bash
+docker compose down -v        # nukes the postgres volume
+docker compose up --build     # re-seeds from data/*.json on next boot
+```
+
+---
+
+## Local development (without Docker)
+
+Useful for backend hot-reload and breakpoint debugging.
+
+### Backend
+
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt -r requirements-dev.txt
+
+# Point at a local Postgres or use SQLite for quick iteration
+export DATABASE_URL=sqlite:///./dev.db
+export KB_DIR=$(pwd)/../data/knowledge_base
+export ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+
+uvicorn main:app --reload --port 8000
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+VITE_API_URL=http://localhost:8000 npm run dev   # served on :5173 in dev
+```
+
+### Tests
+
+```bash
+cd backend && pytest -q                      # 113 tests, runs against SQLite
+pytest -q tests/test_rag.py -k bm25 -v       # target a specific area
+pytest --cov=. --cov-report=term-missing     # coverage
+```
+
+---
+
+## API reference
+
+Base URL: `http://localhost:8000`. Full interactive docs at `/docs` (Swagger) and `/redoc`.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET`  | `/` | Health + `ai_mode: live \| mocked` |
+| `GET`  | `/cases` | List cases (filter by `case_type`, `status`, `assigned_to`) |
+| `GET`  | `/cases/{case_id}` | Case detail: timeline, workflow, matched policy, risk |
+| `POST` | `/cases/{case_id}/notes` | Add caseworker note |
+| `GET`  | `/cases/dashboard/risk` | Portfolio dashboard (escalation/reminder + AQ slice) |
+| `GET`  | `/cases/by-reference/{reference}` | Applicant self-service status lookup |
+| `GET`  | `/cases/{case_id}/recommended-actions` | Rules-engine output for AQ cases |
+| `GET`  | `/cases/workflow/{case_type}` | State machine for a case type |
+| `GET`  | `/cases/policies/` | All policy extracts |
+| `POST` | `/cases/air-quality` | 8-section AQ concern intake |
+| `POST` | `/upload/submit` | Generic case intake (legacy 3 case types) |
+| `GET`  | `/air-quality/schools` | Sensor dashboard (5 schools, summary metrics) |
+| `GET`  | `/air-quality/schools/{urn}` | Per-school sensor detail (RAG / trend / certainty / sources) |
+| `POST` | `/ai/cases/{case_id}/summarise` | RAG-grounded brief with `[KB-N]` citations |
+| `GET`  | `/ai/cases/{case_id}/ask/stream?q=...` | SSE-streamed Q&A grounded in KB |
+
+### Curl examples
+
+```bash
+# Risk dashboard (used by team leader / DfE Delivery Manager)
+curl -s http://localhost:8000/cases/dashboard/risk | jq
+
+# AI brief on the chemical-spill demo case
+curl -s -X POST http://localhost:8000/ai/cases/CASE-2026-00401/summarise | jq
+
+# Streaming Q&A (Ctrl-C to stop)
+curl -N "http://localhost:8000/ai/cases/CASE-2026-00401/ask/stream?q=What%20is%20the%20immediate%20response%3F"
+
+# Per-school sensor detail
+curl -s http://localhost:8000/air-quality/schools/138422 | jq '.measures[] | {name, rag, pct_of_threshold, trend}'
+```
+
+---
+
+## How an AI request flows
+
+```
+ user question                                                       
+      │                                                              
+      ▼                                                              
+ routes/ai.py                                                        
+      │  fetch case + timeline + workflow + matched policy           
+      ▼                                                              
+ rag.py  ── BM25 search over knowledge_base/*.md ──► top-K chunks    
+      │                                                              
+      ▼                                                              
+ ai_pipeline.py                                                      
+   ├─ live   → Claude Haiku 4.5  (system prompt + case + chunks)     
+   └─ mock   → deterministic generator quotes top-1 chunk verbatim   
+      │                                                              
+      ▼                                                              
+ SSE stream → frontend renders text + [KB-N] pills + Sources panel   
+```
+
+Both modes return the same `chunks` array, so the UI is identical whether or not `ANTHROPIC_API_KEY` is set.
 
 ---
 
 ## Demo cases
 
-Pick these for a guided walkthrough:
+| Case | Status | What's interesting |
+|------|--------|--------------------|
+| `CASE-2026-00401` | escalated | **Critical + URGENT** — chemical spill in school prep room |
+| `CASE-2026-00402` | awaiting_evidence | **High** — mould in primary classroom with asthmatic pupils |
+| `CASE-2026-00406` | escalated | **High + URGENT** — recurring mould, 3rd in 12 months |
+| `CASE-2026-00409` | case_created | **Critical + URGENT** — just-submitted cleaning-product incident |
 
-| Case | Type | Status | What's interesting |
-|------|------|--------|--------------------|
-| `CASE-2026-00042` | benefit review | awaiting_evidence | Risk depends on today |
-| `CASE-2026-00214` | benefit review | escalated | Evidence 64 days overdue |
-| `CASE-2026-00091` | licence application | under_review | Clean path |
-| `CASE-2026-00107` | compliance check | escalated | Serious breaches found |
-| `CASE-2026-00401` | air quality | escalated | **Critical + URGENT** — chemical spill in school prep room |
-| `CASE-2026-00402` | air quality | awaiting_evidence | **High** — mould in primary classroom with asthmatic pupils |
-| `CASE-2026-00406` | air quality | escalated | **High + URGENT** — recurring mould, 3rd in 12 months |
-| `CASE-2026-00409` | air quality | case_created | **Critical + URGENT** — just-submitted cleaning-product incident |
-
-Open `CASE-2026-00401`, click **AI brief**, then ask *"What's the immediate response for chemical exposure affecting 8 pupils?"* — the answer streams with inline `[KB-N]` pills and a Sources panel pointing to BB101, HSE COSHH, and `POL-AQ-004`.
+Open `CASE-2026-00401`, click **AI brief**, ask *"What's the immediate response for chemical exposure affecting 8 pupils?"* — answer streams with inline `[KB-N]` pills and a Sources panel.
 
 ---
 
@@ -185,89 +244,59 @@ Open `CASE-2026-00401`, click **AI brief**, then ask *"What's the immediate resp
 |----------|------|------|
 | `j.patel` | Caseworker | team_a cases |
 | `r.singh` | Caseworker | team_b cases |
-| `m.khan` | Team leader | All teams (use this for the risk dashboard) |
+| `m.khan` | Team leader / Delivery Manager | All teams (use this for the portfolio dashboard) |
 
 ---
 
-## What's real vs. mocked
-
-| Component | Status |
-|-----------|--------|
-| Case data, timeline, policy matching, workflow state machine | **Real** — backed by Postgres + seeded JSON |
-| Risk thresholds, recommendations engine | **Real** — pure Python, deterministic |
-| RAG retrieval (BM25 over knowledge base) | **Real** — runs in both AI modes |
-| Sensor data | **Synthetic** — `data/mock_school_air_quality.json`, SAMHE-shaped |
-| AI brief + Q&A | **Mocked by default**, live with `ANTHROPIC_API_KEY` |
-| All applicant / school / pupil PII | **Synthetic** — no real personal data anywhere |
-
----
-
-## Project structure
+## Repository structure
 
 ```
-backend/
-  main.py                 — FastAPI app, lifespan, CORS, RAG index build
-  models.py               — SQLAlchemy: cases, timeline, notes, policies, workflow, users
-  schemas.py              — Pydantic schemas (incl. AirQualityDashboardOut, KbChunkOut)
-  risk.py                 — risk flag computation
-  recommendations.py      — rules engine for AQ cases
-  school_air_quality.py   — sensor dataset loader, RAG / trend / certainty helpers
-  ai_pipeline.py          — Claude (live) + deterministic mock; takes kb_chunks
-  rag.py                  — BM25 retriever (frontmatter parser, chunker, index)
-  seed_data.py            — loads cases / policies / workflow-states JSON
-  routes/
-    cases.py              — CRUD, detail, risk dashboard (with AQ slice)
-    ai.py                 — POST /summarise (RAG-grounded), GET /ask/stream (SSE)
-    upload.py             — generic case submission
-    air_quality.py        — 8-section AQ intake
-    school_air_quality.py — sensor dashboard endpoints
-  tests/                  — 113 tests covering risk, intake, sensor, RAG, AI mock, routes
-
-frontend/
-  src/
-    App.jsx               — GOV.UK layout, nav, user switcher, AI badge
-    api.js                — fetch wrapper, SSE consumer for ask/stream
-    components/
-      CaseQueue            — filterable list with risk pill + severity chip
-      CaseDetail           — three-panel + AQ specialist panel + AI brief + Q&A with KB citations
-      RiskDashboard        — escalation/reminder + AQ slice
-      UploadPortal         — generic intake
-      AirQualityIntake     — 8-section AQ intake
-      SchoolsAirQuality    — sensor dashboard with cross-linked cases
-      ApplicantPortal      — applicant self-service status
-
-data/
-  cases.json                       — 20 synthetic cases (10 legacy + 10 AQ)
-  policy-extracts.json             — 15 policies incl. POL-AQ-001..005
-  workflow-states.json             — state machines per case type
-  mock_school_air_quality.json     — 5 schools × 36 months × 8 measures
-  DATA_SPEC.md                     — threshold authority (CIBSE / WHO / UK NAQS)
-  knowledge_base/                  — RAG corpus (5 markdown docs, 28 chunks)
-
-docs/
-  CONTEXT.md                       — full app context snapshot
-  RAG_ARCHITECTURE.md              — RAG data model, governance, demo Q&A
-  DEPLOYMENT.md                    — GCP VM walkthrough
-  PRD.md · TEST_CASES.md · PROMPT_LIBRARY.md · REBUILD_PLAYBOOK.md
-
-.claude/
-  agents/hackathon-builder.md      — focused implementer agent
-  commands/                        — /generate-cases · /add-case-type · /demo-check · /seed-reset
+school-air-quality-tracker/
+│
+├── docker-compose.yml         # Backend + frontend + PostgreSQL
+├── CLAUDE.md                  # AI agent context & conventions
+│
+├── backend/
+│   ├── main.py                # FastAPI entrypoint
+│   ├── models.py              # SQLAlchemy models
+│   ├── schemas.py             # Pydantic schemas
+│   ├── risk.py                # Risk scoring engine
+│   ├── recommendations.py     # Rules-based actions
+│   ├── school_air_quality.py  # Sensor data loader (RAG bands, trend, certainty)
+│   ├── rag.py                 # BM25 retriever over knowledge base
+│   ├── ai_pipeline.py         # Claude + deterministic mock layer
+│   ├── seed_data.py           # Loads cases / policies / workflow states
+│   └── routes/
+│       ├── cases.py           # CRUD, detail, portfolio dashboard
+│       ├── ai.py              # /summarise, /ask/stream (SSE)
+│       ├── upload.py          # Generic intake
+│       ├── air_quality.py     # 8-section AQ intake
+│       └── school_air_quality.py  # Sensor dashboard endpoints
+│
+├── frontend/
+│   ├── index.html
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── src/
+│       ├── App.jsx            # GOV.UK layout, nav, AI-mode badge
+│       ├── api.js             # fetch + SSE wrapper
+│       └── components/
+│           ├── ApplicantPortal.jsx     # Parent / staff status lookup
+│           ├── UploadPortal.jsx        # Generic intake
+│           ├── AirQualityIntake.jsx    # 8-section AQ report form
+│           ├── CaseQueue.jsx           # Filterable list (risk pill + severity chip)
+│           ├── CaseDetail.jsx          # Timeline · workflow · policy · AI brief + Q&A
+│           ├── RiskDashboard.jsx       # Portfolio view (escalation/reminder + AQ slice)
+│           └── SchoolsAirQuality.jsx   # Sensor dashboard, cross-linked to cases
+│
+└── data/
+    ├── cases.json                       # 20 synthetic cases (10 legacy + 10 AQ)
+    ├── policy-extracts.json             # 15 policy extracts
+    ├── workflow-states.json             # State machines per case type
+    ├── mock_school_air_quality.json     # 5 schools × 36 months × 8 measures
+    ├── DATA_SPEC.md                     # Threshold authority (CIBSE / WHO / UK NAQS)
+    └── knowledge_base/                  # RAG corpus (5 markdown docs, 28 chunks)
 ```
-
----
-
-## Documentation index
-
-| Doc | Audience | Read for |
-|-----|----------|----------|
-| `docs/CONTEXT.md` | Anyone joining the project | Full snapshot of the app today |
-| `docs/RAG_ARCHITECTURE.md` | Data architects, standards team | RAG data model, governance, demo Q&A |
-| `docs/DEPLOYMENT.md` | DevOps / demo runner | GCP VM steps |
-| `docs/PRD.md` | Product / hackathon judges | Problem statement, scope, success criteria |
-| `docs/TEST_CASES.md` | QA / reviewer | Manual test scenarios |
-| `docs/REBUILD_PLAYBOOK.md` | Anyone wanting to rebuild from scratch | Phased prompts |
-| `data/DATA_SPEC.md` | Engineers extending sensor logic | Threshold authority + data shape |
 
 ---
 
@@ -278,18 +307,7 @@ docker compose exec backend pytest -q
 # 113 passed
 ```
 
-Coverage includes risk thresholds, AQ intake, recommendations engine, sensor RAG bands / trend / certainty, BM25 retrieval, AI mock mode (with and without KB chunks), case routes, applicant lookup, and generic upload.
-
----
-
-## Hackathon toolkit
-
-Slash commands (in `.claude/commands/`):
-
-- `/generate-cases N` — generate N more synthetic cases
-- `/add-case-type NAME` — scaffold a fifth case type end-to-end
-- `/demo-check` — pre-demo sanity pass
-- `/seed-reset` — wipe and re-seed the database
+Coverage: risk thresholds, AQ intake, recommendations, sensor RAG bands / trend / certainty, BM25 retrieval, AI mock mode (with and without KB chunks), case routes, applicant lookup, generic upload.
 
 ---
 
@@ -297,13 +315,109 @@ Slash commands (in `.claude/commands/`):
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `ANTHROPIC_API_KEY` | Optional. Unset → mock AI mode | (unset) |
+| `ANTHROPIC_API_KEY` | Optional. Unset → deterministic mock AI mode | (unset) |
 | `DATABASE_URL` | Postgres connection string | auto-set by docker-compose |
-| `PUBLIC_HOST` | Hostname/IP the browser uses (for VM deploys) | `localhost` |
+| `PUBLIC_HOST` | Hostname/IP the browser uses (VM deploys) | `localhost` |
 | `ALLOWED_ORIGINS` | Comma-separated CORS allow-list | localhost variants |
 | `KB_DIR` | Path to RAG knowledge base | `/app/data/knowledge_base` |
 
 See `.env.example` for the canonical list.
+
+---
+
+## What's real vs. mocked
+
+| Component | Status |
+|-----------|--------|
+| Case data, timeline, policy matching, workflow state machine | **Real** — Postgres + seeded JSON |
+| Risk thresholds, recommendations engine | **Real** — pure Python, deterministic |
+| RAG retrieval (BM25 over knowledge base) | **Real** — runs in both AI modes |
+| Sensor data | **Synthetic** — `mock_school_air_quality.json`, SAMHE-shaped |
+| AI brief + Q&A | **Mocked by default**, live with `ANTHROPIC_API_KEY` |
+| All applicant / school / pupil PII | **Synthetic** — no real personal data anywhere |
+
+---
+
+## Extending the app
+
+### Add a knowledge-base document
+
+1. Drop a markdown file into `data/knowledge_base/` with this frontmatter:
+   ```markdown
+   ---
+   doc_id: my-new-guidance
+   title: My New Guidance Document
+   publisher: Some Authority
+   year: 2026
+   url: https://example.gov.uk/guidance
+   ---
+
+   ## Section heading
+   Body chunk 1...
+
+   ## Another section
+   Body chunk 2...
+   ```
+2. Restart the backend — chunks are indexed at lifespan startup. Confirm with the `[rag] indexed N chunks` log line.
+3. Optional: add a row to the KB table in `docs/RAG_ARCHITECTURE.md` so reviewers see provenance.
+
+### Add a new case type
+
+Use the scaffold:
+
+```bash
+.claude/commands/add-case-type.md   # /add-case-type NAME (run via Claude)
+```
+
+Or manually:
+1. Append to `data/workflow-states.json` (states, `required_actions`, `allowed_transitions`, `reminder_days`, `escalation_days`).
+2. Add a route in `backend/routes/` if the intake form has bespoke fields.
+3. Extend `backend/recommendations.py` if you want rules-based suggested actions.
+4. Add a frontend component under `frontend/src/components/` and wire it into `App.jsx` nav.
+5. Add tests under `backend/tests/`.
+
+### Add a sensor measure
+
+1. Update `data/DATA_SPEC.md` with the threshold authority and bands.
+2. Extend the loader in `backend/school_air_quality.py` (RAG bands, % of threshold, trend, certainty helpers).
+3. Add the measure to `data/mock_school_air_quality.json` for all 5 schools × 36 months.
+4. Update `SchoolsAirQuality.jsx` table headers if needed.
+
+### Slash commands (Claude-driven)
+
+`.claude/commands/` ships:
+
+- `/generate-cases N` — generate N more synthetic cases
+- `/add-case-type NAME` — scaffold a new case type end-to-end
+- `/demo-check` — pre-demo sanity pass
+- `/seed-reset` — wipe and re-seed the database
+
+---
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| Frontend shows `ai_mode: mocked` but you set `ANTHROPIC_API_KEY` | Var not exported into the backend container | Check `.env` is in the project root; `docker compose config` to verify |
+| `[rag] indexed 0 knowledge-base chunks` | `KB_DIR` wrong or markdown frontmatter malformed | Confirm path; YAML frontmatter must start at line 1 with `---` |
+| `psycopg2.OperationalError: could not connect` on local dev | Postgres not running, or `DATABASE_URL` points at Docker host | Use `sqlite:///./dev.db` for quick iteration |
+| Stream response is blank | Browser/extension stripping `text/event-stream` | Try the curl example above to isolate; check network tab for SSE frames |
+| CORS error in browser | `ALLOWED_ORIGINS` doesn't include your frontend URL | Add `http://localhost:5173` (Vite dev) to the env var |
+| `pytest` fails on import | Virtualenv not activated | `source backend/.venv/bin/activate` |
+
+---
+
+## Documentation
+
+| Doc | Read for |
+|-----|----------|
+| `docs/CONTEXT.md` | Full app context snapshot |
+| `docs/RAG_ARCHITECTURE.md` | RAG data model, governance, demo Q&A |
+| `docs/DEPLOYMENT.md` | GCP VM walkthrough |
+| `docs/PRD.md` | Problem statement, scope, success criteria |
+| `docs/TEST_CASES.md` | Manual test scenarios |
+| `docs/REBUILD_PLAYBOOK.md` | Phased prompts to rebuild from scratch |
+| `data/DATA_SPEC.md` | Threshold authority + sensor data shape |
 
 ---
 
