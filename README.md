@@ -4,10 +4,6 @@ A platform for monitoring, reporting, and managing air quality concerns in UK sc
 
 Built as a prototype for the **Version 1 AI Engineering Lab Hackathon, April 2026**.
 
-> The repository directory is `pip-caseworker-assistant/` for historical reasons. The project pivoted from PIP-specific scope to a school-air-quality casework tool.
-
----
-
 ## Problem
 
 Poor air quality in school buildings — mould, inadequate ventilation, high CO₂, chemical smells — has a measurable impact on pupil health and learning outcomes. But there is no joined-up system for:
