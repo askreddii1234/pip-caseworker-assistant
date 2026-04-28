@@ -1,133 +1,211 @@
-import anthropic
-import os
-import json
-from typing import AsyncGenerator
+"""AI layer for the caseworker assistant.
 
-client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", ""))
+Two entry points: `summarise_case` and `ask_about_case_stream`.
+
+Both support a mock mode (used when ANTHROPIC_API_KEY is unset). The mock
+path produces deterministic, template-based output grounded in the case
+data, so the demo still works without a model.
+
+Both also accept optional `kb_chunks` — retrieved knowledge-base extracts
+from `rag.retrieve()`. Chunks are rendered into the prompt with [KB-N]
+markers; the system prompt instructs Claude to cite using those markers.
+"""
+import json
+import os
+from typing import AsyncGenerator, Iterable, List, Optional
 
 MODEL = "claude-haiku-4-5-20251001"
 
-PIP_SYSTEM_CONTEXT = """You are an AI assistant for UK DWP PIP (Personal Independence Payment) caseworkers.
-PIP has 12 activities: 10 daily living (preparing food, taking nutrition, managing therapy,
-washing/bathing, managing toilet needs, dressing/undressing, communicating verbally,
-reading/understanding, engaging with others, making budgeting decisions) and 2 mobility
-(planning/following journeys, moving around).
-Each activity has descriptors scored 0-12 points. Daily living: standard rate = 8-11 points,
-enhanced = 12+ points. Mobility: standard = 8-11, enhanced = 12+.
-You must be factual, cite evidence, and never make up information not in the case data."""
+
+def _has_key() -> bool:
+    return bool(os.getenv("ANTHROPIC_API_KEY"))
 
 
-def _build_claim_context(claim, notes, evidence, activity_scores, descriptors) -> str:
-    ctx = f"""## Claim: {claim.id}
-- Claimant: {claim.claimant_name}
-- DOB: {claim.date_of_birth or 'Unknown'}
-- Claim type: {claim.claim_type}
-- Status: {claim.status}
-- Primary condition: {claim.primary_condition or 'Not specified'}
-- Additional conditions: {claim.additional_conditions or 'None'}
-- Medication: {claim.medication or 'Not specified'}
-- Created: {claim.created_at.strftime('%d %B %Y')}
-
-## Assessment Notes
-"""
-    for note in notes:
-        ctx += f"[{note.created_at.strftime('%d/%m/%Y %H:%M')}] {note.author}: {note.content}\n\n"
-
-    ctx += "\n## Evidence\n"
-    for ev in evidence:
-        status = "Received" if ev.received else "MISSING"
-        ctx += f"- {ev.document_type}: {status}"
-        if ev.description:
-            ctx += f" — {ev.description}"
-        if ev.ai_extracted_text:
-            ctx += f"\n  Extracted content: {ev.ai_extracted_text[:500]}"
-        ctx += "\n"
-
-    if activity_scores:
-        ctx += "\n## Current Activity Scores\n"
-        for score in activity_scores:
-            ctx += f"- {score.activity_name} ({score.activity_category}): "
-            if score.ai_suggested_points is not None:
-                ctx += f"AI suggests {score.ai_suggested_points} points"
-                if score.ai_reasoning:
-                    ctx += f" — {score.ai_reasoning}"
-            if score.confirmed_by_caseworker:
-                ctx += f" [CONFIRMED: {score.points} points]"
-            ctx += "\n"
-
-    if descriptors:
-        ctx += "\n## PIP Scoring Descriptors (applicable)\n"
-        for d in descriptors:
-            ctx += f"Activity {d.activity_number}: {d.activity_name} — {d.descriptor_letter}. {d.descriptor_text} ({d.points} points)\n"
-
-    return ctx
+def _client():
+    import anthropic
+    return anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", ""))
 
 
-def summarise_claim(claim, notes, evidence, activity_scores, descriptors) -> dict:
-    context = _build_claim_context(claim, notes, evidence, activity_scores, descriptors)
+SYSTEM = """You are an assistant for UK government caseworkers working on one of four case types:
+benefit_review, licence_application, compliance_check, or air_quality_concern (school air quality).
+You help caseworkers orient quickly on a new case by surfacing what is known, what is missing,
+and what guidance applies.
 
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=800,
-        system=PIP_SYSTEM_CONTEXT + """
-Given a PIP claim file, produce:
-1. A concise 3-sentence summary of the claim and key evidence.
-2. Suggested daily living total score (0-36) based on evidence.
-3. Suggested mobility total score (0-24) based on evidence.
-4. Risk level: "high" (SLA at risk or complex case), "medium", or "low".
-5. One-sentence risk reasoning.
+Be factual. Only use information in the provided case record and knowledge-base extracts.
+Never invent facts about the applicant, timelines, or guidance. If information is missing, say so.
 
-Respond ONLY in JSON:
-{"summary": "...", "daily_living_score": N, "mobility_score": N, "risk_level": "...", "risk_reasoning": "..."}""",
-        messages=[{"role": "user", "content": f"Summarise this PIP claim:\n\n{context}"}],
+When you use a knowledge-base extract, cite it inline using its marker, e.g. [KB-1] or [KB-3].
+You may cite multiple markers in one sentence. Cite policy IDs (e.g. POL-AQ-004) where they
+apply."""
+
+
+def _format_kb(kb_chunks: Optional[List]) -> str:
+    if not kb_chunks:
+        return ""
+    lines = ["", "## Knowledge base extracts"]
+    for i, c in enumerate(kb_chunks, start=1):
+        # Accept both KbChunk dataclass and dicts
+        title = getattr(c, "title", None) or c.get("title", "")
+        publisher = getattr(c, "publisher", None) or c.get("publisher", "")
+        year = getattr(c, "year", None) or c.get("year", "")
+        heading = getattr(c, "heading_path", None) or c.get("heading_path", "")
+        text = getattr(c, "text", None) or c.get("text", "")
+        lines.append(f"[KB-{i}] {title} — {heading} ({publisher} {year})")
+        lines.append(text)
+        lines.append("")
+    return "\n".join(lines)
+
+
+def _build_context(case, timeline, caseworker_notes, current_state, policies,
+                   risk: dict, kb_chunks: Optional[List] = None) -> str:
+    lines = [
+        f"## Case {case.case_id} — {case.case_type}",
+        f"- Applicant: {case.applicant_name} ({case.applicant_reference or 'no ref'})",
+        f"- Assigned to: {case.assigned_to or 'unassigned'}",
+        f"- Status: {case.status}",
+        f"- Created: {case.created_date} | Last updated: {case.last_updated}",
+        f"- Risk flag: {risk['level']} — {risk['reason']}",
+        "",
+        "## Case notes",
+        case.case_notes or "(none)",
+        "",
+        "## Timeline",
+    ]
+    for ev in timeline:
+        lines.append(f"- {ev.date} · {ev.event}: {ev.note or ''}")
+
+    if caseworker_notes:
+        lines.append("")
+        lines.append("## Caseworker notes")
+        for n in caseworker_notes:
+            lines.append(f"- [{n.created_at:%Y-%m-%d}] {n.author}: {n.content}")
+
+    if current_state:
+        lines.append("")
+        lines.append(f"## Current workflow state: {current_state.label}")
+        if current_state.description:
+            lines.append(current_state.description)
+        if current_state.required_actions:
+            lines.append("Required actions:")
+            for a in current_state.required_actions:
+                lines.append(f"  - {a}")
+
+    if policies:
+        lines.append("")
+        lines.append("## Applicable policy extracts")
+        for p in policies:
+            lines.append(f"- {p.policy_id} — {p.title}: {p.body}")
+
+    kb_block = _format_kb(kb_chunks)
+    if kb_block:
+        lines.append(kb_block)
+
+    return "\n".join(lines)
+
+
+# ---- Summarise ----
+
+def _mock_summary(case, timeline, current_state, risk, kb_chunks=None) -> dict:
+    last_event = timeline[-1] if timeline else None
+    actions = (current_state.required_actions if current_state else []) or []
+    next_action = actions[0] if actions else "Review case notes and decide next step."
+
+    key_points = []
+    if case.case_notes:
+        first = case.case_notes.split(". ")[0].strip().rstrip(".")
+        key_points.append(first + ".")
+    if last_event:
+        key_points.append(f"Most recent event on {last_event.date}: {last_event.event.replace('_', ' ')}.")
+    if risk["level"] != "ok":
+        key_points.append(risk["reason"])
+    if kb_chunks:
+        c = kb_chunks[0]
+        title = getattr(c, "title", None) or c.get("title", "")
+        heading = getattr(c, "heading_path", None) or c.get("heading_path", "")
+        key_points.append(f"Relevant guidance [KB-1]: {title} — {heading}.")
+
+    summary = (
+        f"{case.applicant_name} — {case.case_type.replace('_', ' ')} currently {case.status.replace('_', ' ')}. "
+        f"Created {case.created_date}, last updated {case.last_updated}. "
+        f"{risk['reason']}"
     )
-
-    text = response.content[0].text
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        start = text.find("{")
-        end = text.rfind("}") + 1
-        if start != -1 and end > start:
-            return json.loads(text[start:end])
-        return {"summary": text, "daily_living_score": 0, "mobility_score": 0, "risk_level": "medium", "risk_reasoning": "Parse error"}
+    return {
+        "summary": summary,
+        "key_points": key_points or ["No notes recorded yet."],
+        "next_action": next_action,
+        "mocked": True,
+    }
 
 
-def detect_gaps(claim, notes, evidence, activity_scores, descriptors) -> dict:
-    context = _build_claim_context(claim, notes, evidence, activity_scores, descriptors)
+def summarise_case(case, timeline, caseworker_notes, current_state, policies,
+                   risk: dict, kb_chunks: Optional[List] = None) -> dict:
+    if not _has_key():
+        return _mock_summary(case, timeline, current_state, risk, kb_chunks)
 
-    response = client.messages.create(
+    ctx = _build_context(case, timeline, caseworker_notes, current_state, policies, risk, kb_chunks)
+    resp = _client().messages.create(
         model=MODEL,
         max_tokens=500,
-        system=PIP_SYSTEM_CONTEXT + """
-Analyse the PIP claim evidence and identify:
-1. Missing documents that are needed for a complete assessment.
-2. Specific recommended next actions for the caseworker.
-
-Respond ONLY in JSON:
-{"missing": ["..."], "recommendations": ["..."]}""",
-        messages=[{"role": "user", "content": f"Analyse evidence gaps:\n\n{context}"}],
+        system=SYSTEM + "\n\nProduce a briefing for the caseworker. Respond ONLY in JSON with fields: "
+                       '{"summary": "3-sentence overview", "key_points": ["...", "..."], "next_action": "single concrete action"}',
+        messages=[{"role": "user", "content": f"Brief me on this case:\n\n{ctx}"}],
     )
-
-    text = response.content[0].text
+    text = resp.content[0].text
     try:
-        return json.loads(text)
+        data = json.loads(text)
     except json.JSONDecodeError:
-        start = text.find("{")
-        end = text.rfind("}") + 1
-        if start != -1 and end > start:
-            return json.loads(text[start:end])
-        return {"missing": [], "recommendations": [text]}
+        start, end = text.find("{"), text.rfind("}") + 1
+        data = json.loads(text[start:end]) if start != -1 and end > start else {
+            "summary": text, "key_points": [], "next_action": ""
+        }
+    data["mocked"] = False
+    return data
 
 
-async def ask_about_claim_stream(claim, notes, evidence, activity_scores, descriptors, question: str) -> AsyncGenerator[str, None]:
-    context = _build_claim_context(claim, notes, evidence, activity_scores, descriptors)
+# ---- Ask (streaming) ----
 
-    with client.messages.stream(
+async def _mock_ask_stream(case, question: str, risk: dict, current_state,
+                           kb_chunks=None) -> AsyncGenerator[str, None]:
+    reply = (
+        f"[Mock response — no ANTHROPIC_API_KEY set]\n\n"
+        f"Based on case {case.case_id}: status is {case.status.replace('_', ' ')}, "
+        f"risk is {risk['level']}. {risk['reason']}\n\n"
+        f"Your question was: \"{question}\"\n\n"
+    )
+    if current_state and current_state.required_actions:
+        reply += "Required actions at this stage:\n"
+        for a in current_state.required_actions:
+            reply += f"- {a}\n"
+        reply += "\n"
+    if kb_chunks:
+        c = kb_chunks[0]
+        title = getattr(c, "title", None) or c.get("title", "")
+        heading = getattr(c, "heading_path", None) or c.get("heading_path", "")
+        text = getattr(c, "text", None) or c.get("text", "")
+        snippet = text[:280] + ("…" if len(text) > 280 else "")
+        reply += f"Relevant guidance [KB-1] — {title} ({heading}):\n{snippet}\n"
+    # yield in small chunks to simulate streaming
+    for i in range(0, len(reply), 40):
+        yield reply[i:i + 40]
+
+
+async def ask_about_case_stream(
+    case, timeline, caseworker_notes, current_state, policies, risk: dict,
+    question: str, kb_chunks: Optional[List] = None,
+) -> AsyncGenerator[str, None]:
+    if not _has_key():
+        async for chunk in _mock_ask_stream(case, question, risk, current_state, kb_chunks):
+            yield chunk
+        return
+
+    ctx = _build_context(case, timeline, caseworker_notes, current_state, policies, risk, kb_chunks)
+    with _client().messages.stream(
         model=MODEL,
-        max_tokens=800,
-        system=PIP_SYSTEM_CONTEXT + "\nAnswer the caseworker's question using ONLY the case data provided. Be concise and actionable.",
-        messages=[{"role": "user", "content": f"Case context:\n\n{context}\n\nQuestion: {question}"}],
+        max_tokens=600,
+        system=SYSTEM + "\nAnswer using ONLY the case record, policy extracts, and knowledge-base "
+                       "extracts provided. Cite policy IDs (e.g. POL-AQ-004) and knowledge-base "
+                       "markers (e.g. [KB-1]) where relevant.",
+        messages=[{"role": "user", "content": f"Case record:\n\n{ctx}\n\nQuestion: {question}"}],
     ) as stream:
         for text in stream.text_stream:
             yield text

@@ -1,95 +1,80 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-from datetime import datetime
 
-from models import get_db, PIPClaim, AssessmentNote, Evidence, ActivityScore, PIPDescriptor
-from schemas import AISummaryOut, AIGapAnalysis, AIAskRequest, RiskDashboardOut, RiskItem
-from ai_pipeline import summarise_claim, detect_gaps, ask_about_claim_stream
+from models import get_db, Case, Policy, WorkflowState
+from schemas import AISummaryOut, KbChunkOut
+from ai_pipeline import summarise_case, ask_about_case_stream
+from risk import compute_risk
+import rag
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
-def _get_claim_data(claim_id: str, db: Session):
-    claim = db.query(PIPClaim).filter(PIPClaim.id == claim_id).first()
-    if not claim:
-        raise HTTPException(status_code=404, detail="Claim not found")
-    notes = db.query(AssessmentNote).filter(AssessmentNote.claim_id == claim_id).order_by(AssessmentNote.created_at).all()
-    evidence = db.query(Evidence).filter(Evidence.claim_id == claim_id).all()
-    scores = db.query(ActivityScore).filter(ActivityScore.claim_id == claim_id).all()
-    descriptors = db.query(PIPDescriptor).all()
-    return claim, notes, evidence, scores, descriptors
+def _load(case_id: str, db: Session):
+    case = db.query(Case).filter(Case.case_id == case_id).first()
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+
+    current = db.query(WorkflowState).filter(
+        WorkflowState.case_type == case.case_type,
+        WorkflowState.state == case.status,
+    ).first()
+    awaiting = db.query(WorkflowState).filter(
+        WorkflowState.case_type == case.case_type,
+        WorkflowState.state == "awaiting_evidence",
+    ).first()
+    policies = [
+        p for p in db.query(Policy).all()
+        if case.case_type in (p.applicable_case_types or [])
+    ]
+    risk = compute_risk(case, awaiting)
+    return case, case.timeline, case.caseworker_notes, current, policies, risk
 
 
-@router.post("/claims/{claim_id}/summarise", response_model=AISummaryOut)
-def ai_summarise(claim_id: str, db: Session = Depends(get_db)):
-    claim, notes, evidence, scores, descriptors = _get_claim_data(claim_id, db)
-    result = summarise_claim(claim, notes, evidence, scores, descriptors)
-    claim.ai_summary = result.get("summary", "")
-    claim.risk_level = result.get("risk_level", "medium")
-    claim.daily_living_score = result.get("daily_living_score", 0)
-    claim.mobility_score = result.get("mobility_score", 0)
-    claim.updated_at = datetime.utcnow()
+def _summary_query(case) -> str:
+    """Build a retrieval query for the summarise endpoint from case context."""
+    parts = [case.case_type.replace("_", " ")]
+    p = case.submission_payload or {}
+    for key in ("issue_category", "school_name", "severity_level"):
+        v = p.get(key) if isinstance(p, dict) else None
+        if v:
+            parts.append(str(v))
+    if case.case_notes:
+        parts.append(case.case_notes[:200])
+    return " ".join(parts)
+
+
+@router.post("/cases/{case_id}/summarise", response_model=AISummaryOut)
+def ai_summarise(case_id: str, db: Session = Depends(get_db)):
+    case, timeline, notes, current, policies, risk = _load(case_id, db)
+    chunks = rag.retrieve(_summary_query(case), top_k=5, case_type=case.case_type)
+    result = summarise_case(case, timeline, notes, current, policies, risk, kb_chunks=chunks)
+    case.ai_summary = result.get("summary", "")
     db.commit()
+    result["sources"] = [KbChunkOut(**rag.chunk_to_dict(c)) for c in chunks]
     return AISummaryOut(**result)
 
 
-@router.post("/claims/{claim_id}/gaps", response_model=AIGapAnalysis)
-def ai_gaps(claim_id: str, db: Session = Depends(get_db)):
-    claim, notes, evidence, scores, descriptors = _get_claim_data(claim_id, db)
-    result = detect_gaps(claim, notes, evidence, scores, descriptors)
-    return AIGapAnalysis(**result)
+@router.get("/cases/{case_id}/ask/stream")
+async def ai_ask_stream(case_id: str, question: str, db: Session = Depends(get_db)):
+    case, timeline, notes, current, policies, risk = _load(case_id, db)
+    chunks = rag.retrieve(question, top_k=5, case_type=case.case_type)
 
-
-@router.get("/claims/{claim_id}/ask/stream")
-async def ai_ask_stream(claim_id: str, question: str, db: Session = Depends(get_db)):
-    claim, notes, evidence, scores, descriptors = _get_claim_data(claim_id, db)
-
-    async def event_generator():
-        async for chunk in ask_about_claim_stream(claim, notes, evidence, scores, descriptors, question):
+    async def event_gen():
+        # Emit retrieved sources up front so the UI can render the citations panel
+        # before/while the answer streams in.
+        if chunks:
+            import json
+            payload = json.dumps([rag.chunk_to_dict(c) for c in chunks])
+            yield f"event: sources\ndata: {payload}\n\n"
+        async for chunk in ask_about_case_stream(
+            case, timeline, notes, current, policies, risk, question, kb_chunks=chunks
+        ):
+            # Preserve newlines by escaping; client unescapes.
             yield f"data: {chunk}\n\n"
         yield "data: [DONE]\n\n"
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
-
-
-@router.get("/dashboard/risk", response_model=RiskDashboardOut)
-def risk_dashboard(assigned_to: str = None, db: Session = Depends(get_db)):
-    query = db.query(PIPClaim).filter(PIPClaim.status.notin_(["approved", "rejected"]))
-    if assigned_to:
-        query = query.filter(PIPClaim.assigned_to == assigned_to)
-    claims = query.all()
-
-    high_risk, medium_risk = [], []
-    total_open = len(claims)
-    total_high = 0
-    total_breaching_sla = 0
-
-    for claim in claims:
-        missing_count = db.query(Evidence).filter(Evidence.claim_id == claim.id, Evidence.received == False).count()
-        days_open = (datetime.utcnow() - claim.created_at).days
-        days_to_sla = 75 - days_open
-
-        if days_to_sla <= 0:
-            total_breaching_sla += 1
-
-        item = RiskItem(
-            claim_id=claim.id, claimant_name=claim.claimant_name, claim_type=claim.claim_type,
-            risk_level=claim.risk_level, status=claim.status, days_open=days_open,
-            days_to_sla=days_to_sla, missing_evidence_count=missing_count, assigned_to=claim.assigned_to,
-        )
-        if claim.risk_level == "high":
-            high_risk.append(item)
-            total_high += 1
-        elif claim.risk_level == "medium":
-            medium_risk.append(item)
-
-    return RiskDashboardOut(
-        high_risk=sorted(high_risk, key=lambda x: x.days_to_sla),
-        medium_risk=sorted(medium_risk, key=lambda x: x.days_to_sla),
-        stats={
-            "total_open": total_open, "total_high_risk": total_high,
-            "total_breaching_sla": total_breaching_sla,
-            "avg_days_open": round(sum((datetime.utcnow() - c.created_at).days for c in claims) / max(len(claims), 1)),
-        },
-    )
+    return StreamingResponse(event_gen(), media_type="text/event-stream")

@@ -1,0 +1,292 @@
+{
+  "case_types": {
+    "benefit_review": {
+      "states": [
+        {
+          "state": "case_created",
+          "label": "Case created",
+          "description": "Case has been opened. Awaiting initial assessment.",
+          "allowed_transitions": ["awaiting_evidence", "under_review"],
+          "required_actions": [
+            "Confirm applicant identity against records",
+            "Identify trigger for review",
+            "Determine which evidence is required"
+          ]
+        },
+        {
+          "state": "awaiting_evidence",
+          "label": "Awaiting evidence",
+          "description": "Evidence has been requested from the applicant. Waiting for receipt.",
+          "allowed_transitions": ["under_review", "escalated"],
+          "required_actions": [
+            "Send evidence request to applicant",
+            "Log date of evidence request",
+            "Issue reminder if evidence outstanding after 28 days",
+            "Escalate to team leader if evidence outstanding after 56 days"
+          ],
+          "escalation_thresholds": {
+            "reminder_days": 28,
+            "escalation_days": 56
+          }
+        },
+        {
+          "state": "under_review",
+          "label": "Under review",
+          "description": "All required evidence has been received. Case is being assessed against policy.",
+          "allowed_transitions": ["pending_decision", "awaiting_evidence", "escalated"],
+          "required_actions": [
+            "Verify all evidence meets requirements",
+            "Apply relevant policy criteria",
+            "Document assessment reasoning"
+          ]
+        },
+        {
+          "state": "pending_decision",
+          "label": "Pending decision",
+          "description": "Assessment complete. Decision drafted, awaiting sign-off if required.",
+          "allowed_transitions": ["closed"],
+          "required_actions": [
+            "Draft decision letter",
+            "Obtain team leader sign-off if award increase exceeds £50 per week",
+            "Include mandatory reconsideration notice if reducing or ceasing benefit"
+          ]
+        },
+        {
+          "state": "escalated",
+          "label": "Escalated",
+          "description": "Case has been referred to a team leader due to complexity, deadline breach, or serious issue.",
+          "allowed_transitions": ["awaiting_evidence", "under_review", "pending_decision", "closed"],
+          "required_actions": [
+            "Brief team leader on case history and reason for escalation",
+            "Log escalation date and reason",
+            "Await team leader instruction before taking further action"
+          ]
+        },
+        {
+          "state": "closed",
+          "label": "Closed",
+          "description": "Decision has been made and communicated to the applicant.",
+          "allowed_transitions": [],
+          "required_actions": [
+            "Notify applicant in writing within 5 working days",
+            "Update case record with outcome",
+            "Archive all evidence and documentation"
+          ]
+        }
+      ]
+    },
+    "licence_application": {
+      "states": [
+        {
+          "state": "case_created",
+          "label": "Case created",
+          "description": "Application received. Initial eligibility check required.",
+          "allowed_transitions": ["awaiting_evidence", "closed"],
+          "required_actions": [
+            "Check applicant meets basic eligibility criteria (POL-LA-001)",
+            "Identify any missing documentation",
+            "Acknowledge receipt to applicant within 5 working days"
+          ]
+        },
+        {
+          "state": "awaiting_evidence",
+          "label": "Awaiting evidence",
+          "description": "Additional documentation has been requested.",
+          "allowed_transitions": ["under_review", "escalated"],
+          "required_actions": [
+            "Send evidence request",
+            "Log request date",
+            "Issue reminder after 14 days if no response"
+          ]
+        },
+        {
+          "state": "under_review",
+          "label": "Under review",
+          "description": "All evidence received. Application under assessment. Consultation open if required.",
+          "allowed_transitions": ["pending_decision", "escalated"],
+          "required_actions": [
+            "Verify all required documents are present and valid",
+            "Open 28-day public consultation for premises and event licences",
+            "Arrange site inspection where required",
+            "Review any objections received"
+          ]
+        },
+        {
+          "state": "pending_decision",
+          "label": "Pending decision",
+          "description": "Review complete. Decision being drafted.",
+          "allowed_transitions": ["closed", "escalated"],
+          "required_actions": [
+            "Refer to senior caseworker if two or more substantive objections received",
+            "Draft decision with reasons",
+            "Notify applicant of outcome"
+          ]
+        },
+        {
+          "state": "escalated",
+          "label": "Escalated",
+          "description": "Referred to senior caseworker.",
+          "allowed_transitions": ["pending_decision", "closed"],
+          "required_actions": [
+            "Provide senior caseworker with full case summary",
+            "Await instruction"
+          ]
+        },
+        {
+          "state": "closed",
+          "label": "Closed",
+          "description": "Licence granted, refused, or withdrawn.",
+          "allowed_transitions": [],
+          "required_actions": [
+            "Issue licence or refusal notice",
+            "Log outcome on register",
+            "Archive case file"
+          ]
+        }
+      ]
+    },
+    "air_quality_concern": {
+      "states": [
+        {
+          "state": "case_created",
+          "label": "Case created",
+          "description": "Air quality report received. Triage required.",
+          "allowed_transitions": ["awaiting_evidence", "under_review", "escalated"],
+          "required_actions": [
+            "Acknowledge receipt to submitter within 2 working days",
+            "Classify severity (Low / Medium / High / Critical)",
+            "If Critical, escalate same day (see POL-AQ-004)"
+          ]
+        },
+        {
+          "state": "awaiting_evidence",
+          "label": "Awaiting inspection",
+          "description": "Facilities inspection or additional information requested.",
+          "allowed_transitions": ["under_review", "escalated"],
+          "required_actions": [
+            "Arrange facilities inspection within SLA (see POL-AQ-002)",
+            "Issue reminder to facilities team after 3 days",
+            "Escalate if inspection outstanding after 7 days"
+          ],
+          "escalation_thresholds": {
+            "reminder_days": 3,
+            "escalation_days": 7
+          }
+        },
+        {
+          "state": "under_review",
+          "label": "Under review",
+          "description": "Inspection complete. Remediation options being assessed.",
+          "allowed_transitions": ["pending_decision", "escalated", "closed"],
+          "required_actions": [
+            "Record inspection findings in case notes",
+            "Determine remediation or mitigation plan",
+            "Update submitter on progress"
+          ]
+        },
+        {
+          "state": "pending_decision",
+          "label": "Pending decision",
+          "description": "Remediation plan drafted. Awaiting sign-off.",
+          "allowed_transitions": ["closed", "escalated"],
+          "required_actions": [
+            "Share remediation plan with school leadership",
+            "Confirm timeline with facilities team",
+            "Draft closure communication to submitter"
+          ]
+        },
+        {
+          "state": "escalated",
+          "label": "Escalated",
+          "description": "Referred to team leader due to severity, SLA breach or recurring issue.",
+          "allowed_transitions": ["under_review", "pending_decision", "closed"],
+          "required_actions": [
+            "Brief team leader within 1 working day",
+            "Inform school leadership",
+            "Document escalation trigger"
+          ]
+        },
+        {
+          "state": "closed",
+          "label": "Closed",
+          "description": "Remediation completed and confirmed with submitter.",
+          "allowed_transitions": [],
+          "required_actions": [
+            "Confirm remediation with submitter and school",
+            "Log outcome on air quality register",
+            "Schedule follow-up inspection if required"
+          ]
+        }
+      ]
+    },
+    "compliance_check": {
+      "states": [
+        {
+          "state": "case_created",
+          "label": "Case created",
+          "description": "Compliance check opened. Planning phase.",
+          "allowed_transitions": ["awaiting_evidence"],
+          "required_actions": [
+            "Acknowledge referral or log scheduled check",
+            "Identify lead caseworker",
+            "Plan evidence request and any site visit"
+          ]
+        },
+        {
+          "state": "awaiting_evidence",
+          "label": "Awaiting evidence",
+          "description": "Documentation requested from organisation.",
+          "allowed_transitions": ["under_review", "escalated"],
+          "required_actions": [
+            "Send evidence request",
+            "Give organisation 28 days to respond",
+            "Arrange site visit if required (5 working days notice)"
+          ]
+        },
+        {
+          "state": "under_review",
+          "label": "Under review",
+          "description": "Documents received and under assessment. Site visit completed if applicable.",
+          "allowed_transitions": ["pending_decision", "escalated"],
+          "required_actions": [
+            "Review all documentation against compliance requirements",
+            "Complete site visit record within 3 working days if applicable",
+            "Identify any breaches and classify as minor or serious"
+          ]
+        },
+        {
+          "state": "pending_decision",
+          "label": "Pending decision",
+          "description": "Assessment complete. Enforcement decision being prepared.",
+          "allowed_transitions": ["closed", "escalated"],
+          "required_actions": [
+            "Draft outcome letter — warning, requirement to remediate, or enforcement referral",
+            "Escalate to senior officer within 2 working days if serious breach identified"
+          ]
+        },
+        {
+          "state": "escalated",
+          "label": "Escalated",
+          "description": "Referred to senior officer — serious breach identified or complex case.",
+          "allowed_transitions": ["pending_decision", "closed"],
+          "required_actions": [
+            "Brief senior officer within 2 working days",
+            "Provide full evidence pack",
+            "Await instruction on enforcement action"
+          ]
+        },
+        {
+          "state": "closed",
+          "label": "Closed",
+          "description": "Outcome communicated and case concluded.",
+          "allowed_transitions": [],
+          "required_actions": [
+            "Issue outcome letter",
+            "Log outcome on compliance register",
+            "Schedule follow-up inspection if remediation was required"
+          ]
+        }
+      ]
+    }
+  }
+}

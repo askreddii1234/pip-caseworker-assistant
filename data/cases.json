@@ -1,0 +1,1046 @@
+[
+  {
+    "case_id": "CASE-2026-00042",
+    "case_type": "benefit_review",
+    "status": "awaiting_evidence",
+    "applicant": {
+      "name": "Jordan Smith",
+      "reference": "REF-77291",
+      "date_of_birth": "1985-03-14"
+    },
+    "assigned_to": "team_b",
+    "created_date": "2026-01-10",
+    "last_updated": "2026-03-28",
+    "timeline": [
+      {
+        "date": "2026-01-10",
+        "event": "case_created",
+        "note": "Initial application received via online portal."
+      },
+      {
+        "date": "2026-01-15",
+        "event": "evidence_requested",
+        "note": "Requested proof of address and income statement."
+      },
+      {
+        "date": "2026-02-02",
+        "event": "evidence_received",
+        "note": "Proof of address received. Income statement still outstanding."
+      }
+    ],
+    "case_notes": "Applicant relocated from Birmingham to Manchester in December 2025. Previous claim under reference REF-55102 was closed in November 2025. New claim opened due to change of circumstances. Awaiting income statement — applicant stated employer has been contacted."
+  },
+  {
+    "case_id": "CASE-2026-00091",
+    "case_type": "licence_application",
+    "status": "under_review",
+    "applicant": {
+      "name": "Aisha Okafor",
+      "reference": "REF-88102",
+      "date_of_birth": "1979-07-22"
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-02-14",
+    "last_updated": "2026-03-30",
+    "timeline": [
+      {
+        "date": "2026-02-14",
+        "event": "case_created",
+        "note": "Application received by post. All supporting documents included."
+      },
+      {
+        "date": "2026-02-18",
+        "event": "evidence_verified",
+        "note": "Identity documents verified. Premises inspection scheduled."
+      },
+      {
+        "date": "2026-03-05",
+        "event": "inspection_completed",
+        "note": "Inspection passed. No concerns noted."
+      },
+      {
+        "date": "2026-03-06",
+        "event": "under_review",
+        "note": "Case passed to senior caseworker for decision."
+      }
+    ],
+    "case_notes": "Application for event licence — annual community festival, capacity 500. Applicant has held a personal licence for 4 years with no incidents on record. Inspection report is clean. Awaiting decision from senior caseworker."
+  },
+  {
+    "case_id": "CASE-2026-00107",
+    "case_type": "compliance_check",
+    "status": "escalated",
+    "applicant": {
+      "name": "Meridian Care Solutions Ltd",
+      "reference": "REF-90034",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_c",
+    "created_date": "2026-01-28",
+    "last_updated": "2026-04-01",
+    "timeline": [
+      {
+        "date": "2026-01-28",
+        "event": "case_created",
+        "note": "Compliance check triggered by third-party referral."
+      },
+      {
+        "date": "2026-02-04",
+        "event": "evidence_requested",
+        "note": "Requested trading records and staff qualification certificates."
+      },
+      {
+        "date": "2026-02-20",
+        "event": "evidence_received",
+        "note": "Partial documentation received. Staff qualification records incomplete."
+      },
+      {
+        "date": "2026-03-10",
+        "event": "site_visit",
+        "note": "Site visit conducted. Two regulatory breaches identified."
+      },
+      {
+        "date": "2026-03-11",
+        "event": "escalated",
+        "note": "Escalated to senior officer due to severity of breaches found."
+      }
+    ],
+    "case_notes": "Two breaches identified during site visit: (1) two members of staff operating without required qualification certificates, (2) record-keeping failures covering a 6-month period. Organisation has been notified. Legal team has been copied in. Enforcement options under consideration."
+  },
+  {
+    "case_id": "CASE-2026-00133",
+    "case_type": "benefit_review",
+    "status": "pending_decision",
+    "applicant": {
+      "name": "Callum Rafferty",
+      "reference": "REF-66210",
+      "date_of_birth": "1991-11-03"
+    },
+    "assigned_to": "team_b",
+    "created_date": "2026-02-01",
+    "last_updated": "2026-04-02",
+    "timeline": [
+      {
+        "date": "2026-02-01",
+        "event": "case_created",
+        "note": "Review triggered by reported change of employment status."
+      },
+      {
+        "date": "2026-02-05",
+        "event": "evidence_requested",
+        "note": "Requested P45, new employer details, and updated income statement."
+      },
+      {
+        "date": "2026-02-19",
+        "event": "evidence_received",
+        "note": "All three documents received and verified."
+      },
+      {
+        "date": "2026-03-01",
+        "event": "under_review",
+        "note": "Case assessed. Policy criteria reviewed."
+      },
+      {
+        "date": "2026-04-02",
+        "event": "pending_decision",
+        "note": "Draft decision prepared. Awaiting sign-off from team leader."
+      }
+    ],
+    "case_notes": "Change of employment from full-time to part-time (22 hours per week). New income is below threshold — entitlement appears to increase under current policy. Draft decision recommends award adjustment. Straightforward case, no complications identified."
+  },
+  {
+    "case_id": "CASE-2026-00158",
+    "case_type": "benefit_review",
+    "status": "awaiting_evidence",
+    "applicant": {
+      "name": "Priya Mehta",
+      "reference": "REF-71049",
+      "date_of_birth": "1967-04-29"
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-02-28",
+    "last_updated": "2026-03-05",
+    "timeline": [
+      {
+        "date": "2026-02-28",
+        "event": "case_created",
+        "note": "Review triggered by annual reassessment cycle."
+      },
+      {
+        "date": "2026-03-05",
+        "event": "evidence_requested",
+        "note": "Requested medical certificate and current income statement."
+      }
+    ],
+    "case_notes": "Annual reassessment. Evidence pack sent to applicant's registered address on 5 March. No response received to date. 28-day deadline for reminder has not yet been reached."
+  },
+  {
+    "case_id": "CASE-2026-00172",
+    "case_type": "licence_application",
+    "status": "closed",
+    "applicant": {
+      "name": "The Old Crown Ltd",
+      "reference": "REF-81773",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-01-05",
+    "last_updated": "2026-02-28",
+    "timeline": [
+      {
+        "date": "2026-01-05",
+        "event": "case_created",
+        "note": "Application for premises licence renewal."
+      },
+      {
+        "date": "2026-01-09",
+        "event": "evidence_verified",
+        "note": "All documents verified. No objections received during consultation period."
+      },
+      {
+        "date": "2026-01-20",
+        "event": "under_review",
+        "note": "Review completed. No issues identified."
+      },
+      {
+        "date": "2026-01-22",
+        "event": "pending_decision",
+        "note": "Decision drafted — renewal recommended."
+      },
+      {
+        "date": "2026-02-28",
+        "event": "closed",
+        "note": "Licence renewed. Applicant notified by letter."
+      }
+    ],
+    "case_notes": "Renewal of existing premises licence. Clean history over 5-year term. Renewal approved without conditions. File closed."
+  },
+  {
+    "case_id": "CASE-2026-00199",
+    "case_type": "compliance_check",
+    "status": "awaiting_evidence",
+    "applicant": {
+      "name": "Greenfield Training Academy",
+      "reference": "REF-94421",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_c",
+    "created_date": "2026-03-15",
+    "last_updated": "2026-03-18",
+    "timeline": [
+      {
+        "date": "2026-03-15",
+        "event": "case_created",
+        "note": "Routine compliance check — scheduled as part of annual programme."
+      },
+      {
+        "date": "2026-03-18",
+        "event": "evidence_requested",
+        "note": "Requested course delivery records, learner outcomes data, and tutor qualification certificates."
+      }
+    ],
+    "case_notes": "Routine scheduled check. Organisation last inspected 18 months ago with no issues found. Evidence request sent by email and recorded post. 28-day response window in progress."
+  },
+  {
+    "case_id": "CASE-2026-00214",
+    "case_type": "benefit_review",
+    "status": "escalated",
+    "applicant": {
+      "name": "Marcus Okonkwo",
+      "reference": "REF-55887",
+      "date_of_birth": "1978-09-16"
+    },
+    "assigned_to": "team_b",
+    "created_date": "2025-11-10",
+    "last_updated": "2026-01-20",
+    "timeline": [
+      {
+        "date": "2025-11-10",
+        "event": "case_created",
+        "note": "Review triggered by change of address notification."
+      },
+      {
+        "date": "2025-11-17",
+        "event": "evidence_requested",
+        "note": "Requested proof of new address and updated tenancy agreement."
+      },
+      {
+        "date": "2026-01-20",
+        "event": "escalated",
+        "note": "Evidence outstanding for 64 days. Escalated to team leader per policy."
+      }
+    ],
+    "case_notes": "Evidence has been outstanding for 64 days, which exceeds the 56-day escalation threshold defined in POL-BR-003. Two reminder letters sent (day 28 and day 42). No response received. Applicant's telephone number on record appears to be incorrect. Team leader to advise on next steps."
+  },
+  {
+    "case_id": "CASE-2026-00231",
+    "case_type": "licence_application",
+    "status": "pending_decision",
+    "applicant": {
+      "name": "Riverside Events Ltd",
+      "reference": "REF-79003",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-02-20",
+    "last_updated": "2026-04-01",
+    "timeline": [
+      {
+        "date": "2026-02-20",
+        "event": "case_created",
+        "note": "New application for premises licence — outdoor venue."
+      },
+      {
+        "date": "2026-02-25",
+        "event": "evidence_requested",
+        "note": "Requested noise management plan, site plan, and public liability insurance."
+      },
+      {
+        "date": "2026-03-10",
+        "event": "evidence_received",
+        "note": "All documents received."
+      },
+      {
+        "date": "2026-03-14",
+        "event": "consultation_opened",
+        "note": "28-day public consultation opened."
+      },
+      {
+        "date": "2026-04-01",
+        "event": "pending_decision",
+        "note": "Two objections received during consultation. Being reviewed before decision."
+      }
+    ],
+    "case_notes": "Two objections received from local residents during consultation period — both relate to potential noise impact on residential properties. Applicant has submitted an updated noise management plan in response. Senior caseworker to review objections and updated plan before issuing decision."
+  },
+  {
+    "case_id": "CASE-2026-00248",
+    "case_type": "compliance_check",
+    "status": "under_review",
+    "applicant": {
+      "name": "Hartwood Construction plc",
+      "reference": "REF-62190",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_c",
+    "created_date": "2026-03-01",
+    "last_updated": "2026-04-03",
+    "timeline": [
+      {
+        "date": "2026-03-01",
+        "event": "case_created",
+        "note": "Compliance check triggered by whistleblower report."
+      },
+      {
+        "date": "2026-03-05",
+        "event": "evidence_requested",
+        "note": "Requested health and safety records, site inspection logs, and incident reports for the past 12 months."
+      },
+      {
+        "date": "2026-03-19",
+        "event": "evidence_received",
+        "note": "Full documentation package received."
+      },
+      {
+        "date": "2026-03-25",
+        "event": "under_review",
+        "note": "Documents under review. Initial read suggests records are largely compliant."
+      }
+    ],
+    "case_notes": "Triggered by anonymous report alleging inadequate health and safety practices at two sites. Documentation received is extensive and appears largely in order. One gap noted: no incident log entries for a 6-week period in autumn 2025. Organisation has been asked for clarification on this gap."
+  },
+  {
+    "case_id": "CASE-2026-00401",
+    "case_type": "air_quality_concern",
+    "status": "escalated",
+    "applicant": {
+      "name": "Helen Carter",
+      "reference": "AQ-2026-00401",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_c",
+    "created_date": "2026-04-13",
+    "last_updated": "2026-04-14",
+    "severity_level": "Critical",
+    "is_urgent": true,
+    "timeline": [
+      {
+        "date": "2026-04-13",
+        "event": "case_created",
+        "note": "Reported via school phone line. Chemistry teacher noticed strong chemical smell and minor spill in prep room."
+      },
+      {
+        "date": "2026-04-13",
+        "event": "escalated",
+        "note": "Critical severity — escalated same day per POL-AQ-004. Prep room and lab 3 closed to pupils and staff pending assessor attendance."
+      },
+      {
+        "date": "2026-04-14",
+        "event": "site_visit",
+        "note": "Qualified assessor attended. Spill traced to leaking sodium hypochlorite container. Ventilated and cleaned. Air readings normal after 4 hours."
+      }
+    ],
+    "case_notes": "Chemical spillage in science prep room at Greenwood Academy. Two pupils reported dizziness during afternoon lesson. School nurse assessed — no medical attention required. Lab 3 and prep room closed as a precaution. Facilities replacing ventilation filter. Incident reported to head of school. Awaiting all-clear from assessor before re-opening spaces.",
+    "submission_payload": {
+      "submitter_name": "Helen Carter",
+      "submitter_role": "Teaching Staff",
+      "contact_email": "h.carter@brockwell.sch.example",
+      "contact_phone": "01142 555 019",
+      "school_name": "Greenwood Academy",
+      "building_location_room": "Science block, prep room + lab 3",
+      "incident_datetime": "2026-04-13T13:45",
+      "issue_category": "Chemical Smell",
+      "detailed_description": "Strong chlorine-like smell in prep room after lunchtime. On entering, found a 250ml bottle of sodium hypochlorite solution leaking on the bottom shelf. Two year 9 pupils in the adjoining lab 3 reported dizziness. Room cleared and ventilated. Smell still detectable at end of day.",
+      "symptoms": [
+        "Dizziness",
+        "Headache",
+        "Eye irritation"
+      ],
+      "affected_count": 24,
+      "duration": "Same day",
+      "observations": [
+        "Visible liquid spill",
+        "Strong chemical odour",
+        "Container damaged"
+      ],
+      "observations_notes": "Bottle lid was cracked. Spill approximately 150ml on shelf and floor.",
+      "severity_level": "Critical",
+      "urgency": true,
+      "related_incidents": "None on record.",
+      "attachments": [
+        {
+          "file_name": "prep_room_spill.jpg",
+          "file_type": "image/jpeg"
+        },
+        {
+          "file_name": "container_damage.jpg",
+          "file_type": "image/jpeg"
+        }
+      ],
+      "assigned_officer_name": "Samira Ahmed",
+      "follow_up_date": "2026-04-20"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00402",
+    "case_type": "air_quality_concern",
+    "status": "awaiting_evidence",
+    "applicant": {
+      "name": "Priya Shah",
+      "reference": "AQ-2026-00402",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-04-02",
+    "last_updated": "2026-04-07",
+    "severity_level": "High",
+    "is_urgent": false,
+    "timeline": [
+      {
+        "date": "2026-04-02",
+        "event": "case_created",
+        "note": "Report from parent. Visible mould patches in year 4 classroom noted after Easter break."
+      },
+      {
+        "date": "2026-04-07",
+        "event": "evidence_requested",
+        "note": "Facilities asked to inspect classroom 4B within 5 working days and take moisture readings (POL-AQ-002)."
+      }
+    ],
+    "case_notes": "Visible black mould patches on the external wall of classroom 4B at Oakfield Primary, first spotted after the Easter break. Teacher reports two pupils with asthma are currently seated on that side of the room. Severity set to High per POL-AQ-003 (Mold/Moisture + vulnerable pupils). Facilities inspection requested; reminder due if not completed by 2026-04-10.",
+    "submission_payload": {
+      "submitter_name": "Priya Shah",
+      "submitter_role": "Parent",
+      "contact_email": "priya.shah@example.com",
+      "contact_phone": "07700 900 214",
+      "school_name": "Oakfield Primary School",
+      "building_location_room": "Main building, classroom 4B",
+      "incident_datetime": "2026-04-02T08:15",
+      "issue_category": "Mold/Moisture",
+      "detailed_description": "When I dropped my daughter at school on the first day back from Easter break I noticed dark patches on the wall near the reading corner. The teacher said they had been there for a few days. My daughter has asthma and I'm worried. The classroom also smelled musty — like damp washing.",
+      "symptoms": [
+        "Coughing",
+        "Wheezing",
+        "Musty smell reported"
+      ],
+      "affected_count": 28,
+      "duration": "At least 5 days",
+      "observations": [
+        "Visible mold/mould",
+        "Damp/condensation on wall",
+        "Musty odour"
+      ],
+      "observations_notes": "Mould patches each approx 15cm across, on the north-facing external wall.",
+      "severity_level": "High",
+      "urgency": false,
+      "related_incidents": "None reported in 4B previously. Similar issue in classroom 5A resolved 2025-11.",
+      "attachments": [
+        {
+          "file_name": "wall_mould_patch.jpg",
+          "file_type": "image/jpeg"
+        }
+      ],
+      "assigned_officer_name": "Jaya Patel",
+      "follow_up_date": "2026-04-17"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00403",
+    "case_type": "air_quality_concern",
+    "status": "under_review",
+    "applicant": {
+      "name": "Dominic Reeves",
+      "reference": "AQ-2026-00403",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_b",
+    "created_date": "2026-03-25",
+    "last_updated": "2026-04-12",
+    "severity_level": "Medium",
+    "is_urgent": false,
+    "timeline": [
+      {
+        "date": "2026-03-25",
+        "event": "case_created",
+        "note": "Facilities staff report stuffiness and headaches during whole-school assemblies."
+      },
+      {
+        "date": "2026-03-29",
+        "event": "evidence_requested",
+        "note": "CO2 monitor deployed for 48 hours during occupied hours."
+      },
+      {
+        "date": "2026-04-05",
+        "event": "evidence_received",
+        "note": "CO2 peak 2,180 ppm during 200-pupil assembly. Average 1,400 ppm over monitored period."
+      },
+      {
+        "date": "2026-04-12",
+        "event": "under_review",
+        "note": "Readings reviewed. Discussing mechanical ventilation upgrade options with facilities team."
+      }
+    ],
+    "case_notes": "CO2 concentrations in the assembly hall at Northgate Secondary exceed the 1,500 ppm guidance threshold during occupied assemblies (peak 2,180 ppm). Existing ventilation relies on trickle vents and opening doors. Options under consideration: mechanical extract upgrade (£18k indicative), staggered assemblies (no cost, reduces headcount 50%), or combination. Briefing note to team leader in preparation.",
+    "submission_payload": {
+      "submitter_name": "Dominic Reeves",
+      "submitter_role": "Facilities Staff",
+      "contact_email": "d.reeves@crownhill.sch.example",
+      "contact_phone": "01142 555 044",
+      "school_name": "Northgate Secondary School",
+      "building_location_room": "Main assembly hall",
+      "incident_datetime": "2026-03-25T09:00",
+      "issue_category": "Poor Ventilation",
+      "detailed_description": "Noticed pupils and staff consistently complaining of stuffiness, headaches and drowsiness toward the end of whole-school assemblies (capacity ~200). Problem is worse in winter when doors and windows stay closed. No mechanical ventilation in place.",
+      "symptoms": [
+        "Headache",
+        "Drowsiness",
+        "Difficulty concentrating"
+      ],
+      "affected_count": 210,
+      "duration": "Ongoing — noticeable for several months",
+      "observations": [
+        "High CO2 reading",
+        "Stuffy atmosphere",
+        "Inadequate ventilation"
+      ],
+      "observations_notes": "CO2 consistently above 1,500 ppm during occupied assemblies.",
+      "severity_level": "Medium",
+      "urgency": false,
+      "related_incidents": "Sports hall raised a similar concern 2025-09, resolved by opening louvre vents.",
+      "attachments": [
+        {
+          "file_name": "co2_monitor_log.csv",
+          "file_type": "text/csv"
+        }
+      ],
+      "assigned_officer_name": "Raj Singh",
+      "follow_up_date": "2026-04-24"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00404",
+    "case_type": "air_quality_concern",
+    "status": "case_created",
+    "applicant": {
+      "name": "Oliver Hughes",
+      "reference": "AQ-2026-00404",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-04-15",
+    "last_updated": "2026-04-15",
+    "severity_level": "Low",
+    "is_urgent": false,
+    "timeline": [
+      {
+        "date": "2026-04-15",
+        "event": "case_created",
+        "note": "Student raised via school council. Classroom 2C consistently warm in afternoons."
+      }
+    ],
+    "case_notes": "Year 10 student reports classroom 2C at Oakfield Primary reaches high temperatures in afternoons — windows face south-west and there is no shading. No symptoms reported beyond discomfort. Suggest temperature logging before considering shading or aircon options.",
+    "submission_payload": {
+      "submitter_name": "Oliver Hughes",
+      "submitter_role": "Student",
+      "contact_email": "o.hughes@ashbury-sch.example",
+      "contact_phone": "",
+      "school_name": "Oakfield Primary School",
+      "building_location_room": "Classroom 2C, upper floor",
+      "incident_datetime": "2026-04-15T14:10",
+      "issue_category": "Temperature Issues",
+      "detailed_description": "Our classroom gets really hot in the afternoon, especially after lunch. Some people feel sleepy and it's hard to concentrate. Nobody has been unwell but it's been happening all term.",
+      "symptoms": [
+        "Drowsiness",
+        "Difficulty concentrating"
+      ],
+      "affected_count": 30,
+      "duration": "All spring term",
+      "observations": [
+        "High temperature",
+        "Direct sunlight",
+        "No shading"
+      ],
+      "observations_notes": "Room faces south-west, no blinds fitted.",
+      "severity_level": "Low",
+      "urgency": false,
+      "related_incidents": "",
+      "attachments": [],
+      "assigned_officer_name": "Jaya Patel",
+      "follow_up_date": "2026-04-29"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00405",
+    "case_type": "air_quality_concern",
+    "status": "closed",
+    "applicant": {
+      "name": "Natalie Brooks",
+      "reference": "AQ-2026-00405",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_b",
+    "created_date": "2026-02-20",
+    "last_updated": "2026-03-18",
+    "severity_level": "Medium",
+    "is_urgent": false,
+    "timeline": [
+      {
+        "date": "2026-02-20",
+        "event": "case_created",
+        "note": "Parent reported visible dust and irritation in classroom after half-term maintenance works."
+      },
+      {
+        "date": "2026-02-23",
+        "event": "evidence_requested",
+        "note": "Facilities asked to inspect classrooms 1A-1D and corridor."
+      },
+      {
+        "date": "2026-02-27",
+        "event": "evidence_received",
+        "note": "Inspection found residual gypsum dust from corridor skim-coat works."
+      },
+      {
+        "date": "2026-03-04",
+        "event": "under_review",
+        "note": "Full deep clean scheduled out of hours. Contractor scope reviewed."
+      },
+      {
+        "date": "2026-03-15",
+        "event": "pending_decision",
+        "note": "Deep clean complete. Contractor RAM tightened for future works."
+      },
+      {
+        "date": "2026-03-18",
+        "event": "closed",
+        "note": "Submitter confirmed issue resolved. Outcome logged on register."
+      }
+    ],
+    "case_notes": "Plaster/gypsum dust left on surfaces and floors following corridor works at St Mary's CE Primary. No ventilation isolation during the works. Remediated via deep clean and contractor method statement update. Case closed; submitter confirmed satisfactory.",
+    "submission_payload": {
+      "submitter_name": "Natalie Brooks",
+      "submitter_role": "Parent",
+      "contact_email": "natalie.brooks@example.com",
+      "contact_phone": "07700 900 432",
+      "school_name": "St Mary's Church of England Primary School",
+      "building_location_room": "Ground floor, classrooms 1A-1D and main corridor",
+      "incident_datetime": "2026-02-20T08:30",
+      "issue_category": "Dust/Particles",
+      "detailed_description": "Returned from half-term to find a film of dust over desks and bookcases in my son's classroom (1B). Other parents noticed the same in 1A and 1D. Children with hayfever were sneezing immediately on arrival. I understand there was corridor plastering work done over half-term.",
+      "symptoms": [
+        "Sneezing",
+        "Eye irritation"
+      ],
+      "affected_count": 90,
+      "duration": "First day back after half term",
+      "observations": [
+        "Visible dust",
+        "Recent maintenance works",
+        "Gypsum/plaster residue"
+      ],
+      "observations_notes": "Contractor had not sealed classroom doors during skim-coat works.",
+      "severity_level": "Medium",
+      "urgency": false,
+      "related_incidents": "",
+      "attachments": [
+        {
+          "file_name": "desk_dust.jpg",
+          "file_type": "image/jpeg"
+        }
+      ],
+      "assigned_officer_name": "Raj Singh",
+      "follow_up_date": null
+    }
+  },
+  {
+    "case_id": "CASE-2026-00406",
+    "case_type": "air_quality_concern",
+    "status": "escalated",
+    "applicant": {
+      "name": "George Whitfield",
+      "reference": "AQ-2026-00406",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_c",
+    "created_date": "2026-03-10",
+    "last_updated": "2026-04-14",
+    "severity_level": "High",
+    "is_urgent": true,
+    "timeline": [
+      {
+        "date": "2026-03-10",
+        "event": "case_created",
+        "note": "Admin staff reported recurring mould in the admin corridor ceiling void."
+      },
+      {
+        "date": "2026-03-13",
+        "event": "evidence_requested",
+        "note": "Facilities inspection to include roof void."
+      },
+      {
+        "date": "2026-03-20",
+        "event": "evidence_received",
+        "note": "Confirmed roof leak causing recurring mould. Short-term containment in place."
+      },
+      {
+        "date": "2026-04-02",
+        "event": "under_review",
+        "note": "Third instance of recurrence in 12 months. Capital works case being built."
+      },
+      {
+        "date": "2026-04-14",
+        "event": "escalated",
+        "note": "Escalated to team leader — recurrent issue affecting vulnerable admin staff member on long-term asthma plan."
+      }
+    ],
+    "case_notes": "Recurring mould in the ceiling void of the admin corridor at Northgate Secondary. Third recurrence in 12 months — root cause is a roof leak that has been patched twice. Admin team includes one staff member with severe asthma. Team leader briefed; capital works case being prepared for 2026-27 budget cycle. Meanwhile, dehumidifiers in place and weekly monitoring established.",
+    "submission_payload": {
+      "submitter_name": "George Whitfield",
+      "submitter_role": "Admin Staff",
+      "contact_email": "g.whitfield@fieldgate.sch.example",
+      "contact_phone": "01142 555 099",
+      "school_name": "Northgate Secondary School",
+      "building_location_room": "Admin corridor, ceiling void adjacent to reception",
+      "incident_datetime": "2026-03-10T09:00",
+      "issue_category": "Mold/Moisture",
+      "detailed_description": "Black mould has reappeared on the ceiling tiles in the admin corridor for the third time in a year. Musty smell is noticeable from the reception. One of my colleagues has severe asthma and has had to move desks twice already.",
+      "symptoms": [
+        "Wheezing",
+        "Musty smell reported"
+      ],
+      "affected_count": 8,
+      "duration": "Recurring over 12 months",
+      "observations": [
+        "Visible mold/mould",
+        "Water ingress",
+        "Musty odour",
+        "Recurring issue"
+      ],
+      "observations_notes": "Tile replaced twice previously. Roof leak suspected.",
+      "severity_level": "High",
+      "urgency": true,
+      "related_incidents": "Prior instances in 2025-06 and 2025-11 (same location).",
+      "attachments": [
+        {
+          "file_name": "ceiling_mould_march.jpg",
+          "file_type": "image/jpeg"
+        },
+        {
+          "file_name": "roof_leak_trace.pdf",
+          "file_type": "application/pdf"
+        }
+      ],
+      "assigned_officer_name": "Samira Ahmed",
+      "follow_up_date": "2026-04-22"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00407",
+    "case_type": "air_quality_concern",
+    "status": "under_review",
+    "applicant": {
+      "name": "Anika Desai",
+      "reference": "AQ-2026-00407",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-04-05",
+    "last_updated": "2026-04-14",
+    "severity_level": "Low",
+    "is_urgent": false,
+    "timeline": [
+      {
+        "date": "2026-04-05",
+        "event": "case_created",
+        "note": "Kitchen staff reported drain odour in dining hall, intermittent, worse on warm days."
+      },
+      {
+        "date": "2026-04-08",
+        "event": "evidence_requested",
+        "note": "Drainage contractor asked to inspect trap seals and ventilation stack."
+      },
+      {
+        "date": "2026-04-12",
+        "event": "evidence_received",
+        "note": "One dry trap identified in dining hall kitchenette. Refilled and sealed."
+      },
+      {
+        "date": "2026-04-14",
+        "event": "under_review",
+        "note": "Monitoring for recurrence. No symptoms reported. Case likely closable next week."
+      }
+    ],
+    "case_notes": "Intermittent drain odour in the main dining hall kitchenette at Oakfield Primary. Trap seal was dry; refilled. No symptoms reported. Monitoring this week before closing.",
+    "submission_payload": {
+      "submitter_name": "Anika Desai",
+      "submitter_role": "Facilities Staff",
+      "contact_email": "a.desai@ashbury-sch.example",
+      "contact_phone": "01142 555 211",
+      "school_name": "Oakfield Primary School",
+      "building_location_room": "Main dining hall kitchenette",
+      "incident_datetime": "2026-04-05T11:20",
+      "issue_category": "Odor",
+      "detailed_description": "Kitchen staff noticed an unpleasant drain-like odour in the dining hall kitchenette. Comes and goes, worse on warm days. No one's been unwell but it's unpleasant during lunch service.",
+      "symptoms": [],
+      "affected_count": 6,
+      "duration": "About 2 weeks",
+      "observations": [
+        "Intermittent odour",
+        "Worse on warm days"
+      ],
+      "observations_notes": "Drainage contractor found one dry trap.",
+      "severity_level": "Low",
+      "urgency": false,
+      "related_incidents": "",
+      "attachments": [],
+      "assigned_officer_name": "Jaya Patel",
+      "follow_up_date": "2026-04-21"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00408",
+    "case_type": "air_quality_concern",
+    "status": "under_review",
+    "applicant": {
+      "name": "Lisa Thornton",
+      "reference": "AQ-2026-00408",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_b",
+    "created_date": "2026-04-01",
+    "last_updated": "2026-04-13",
+    "severity_level": "High",
+    "is_urgent": false,
+    "timeline": [
+      {
+        "date": "2026-04-01",
+        "event": "case_created",
+        "note": "PE staff reported sports hall AHU running intermittently. Pupils with asthma affected during PE."
+      },
+      {
+        "date": "2026-04-04",
+        "event": "evidence_requested",
+        "note": "Mechanical contractor attendance requested. Short-term: timetable adjusted so asthmatic pupils use smaller hall."
+      },
+      {
+        "date": "2026-04-10",
+        "event": "evidence_received",
+        "note": "AHU fan motor failed. Parts ordered, install window 10-14 April."
+      },
+      {
+        "date": "2026-04-13",
+        "event": "under_review",
+        "note": "Install pending. Daily check on fall-back arrangements."
+      }
+    ],
+    "case_notes": "Air-handling unit serving the sports hall at Greenwood Academy has an intermittent fan motor failure. Two pupils with asthma have been affected during PE lessons — symptoms improve after leaving the hall. Short-term mitigation: asthmatic pupils redirected to the smaller activity hall. Parts arrive this week; install by end of week.",
+    "submission_payload": {
+      "submitter_name": "Lisa Thornton",
+      "submitter_role": "Teaching Staff",
+      "contact_email": "l.thornton@brockwell.sch.example",
+      "contact_phone": "01142 555 018",
+      "school_name": "Greenwood Academy",
+      "building_location_room": "Main sports hall",
+      "incident_datetime": "2026-04-01T10:40",
+      "issue_category": "Poor Ventilation",
+      "detailed_description": "Our AHU for the sports hall has been tripping on and off. During Tuesday's year 8 PE lesson, two pupils with asthma had to step out. Hall gets very stuffy within 20 minutes of a class starting. Windows alone are not sufficient.",
+      "symptoms": [
+        "Wheezing",
+        "Shortness of breath"
+      ],
+      "affected_count": 120,
+      "duration": "3+ weeks intermittent",
+      "observations": [
+        "Inadequate ventilation",
+        "Equipment fault",
+        "Stuffy atmosphere"
+      ],
+      "observations_notes": "AHU fan motor identified as failing.",
+      "severity_level": "High",
+      "urgency": false,
+      "related_incidents": "",
+      "attachments": [
+        {
+          "file_name": "ahu_fault_log.pdf",
+          "file_type": "application/pdf"
+        }
+      ],
+      "assigned_officer_name": "Raj Singh",
+      "follow_up_date": "2026-04-19"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00409",
+    "case_type": "air_quality_concern",
+    "status": "case_created",
+    "applicant": {
+      "name": "Karen Bailey",
+      "reference": "AQ-2026-00409",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_c",
+    "created_date": "2026-04-16",
+    "last_updated": "2026-04-16",
+    "severity_level": "Critical",
+    "is_urgent": true,
+    "timeline": [
+      {
+        "date": "2026-04-16",
+        "event": "case_created",
+        "note": "Submitted 09:12. Cleaning team used an unapproved product; strong fumes reported in year 2 classroom. Triage started."
+      }
+    ],
+    "case_notes": "Just in. Cleaning contractor used an unapproved acidic descaler in classroom 2A at St Mary's CE Primary this morning; strong fumes reported. Class evacuated to hall. One child felt nauseous. Severity provisionally Critical pending POL-AQ-003 review; needs same-day escalation per POL-AQ-004.",
+    "submission_payload": {
+      "submitter_name": "Karen Bailey",
+      "submitter_role": "Teaching Staff",
+      "contact_email": "k.bailey@dunbar-sch.example",
+      "contact_phone": "01142 555 305",
+      "school_name": "St Mary's Church of England Primary School",
+      "building_location_room": "Classroom 2A",
+      "incident_datetime": "2026-04-16T08:40",
+      "issue_category": "Chemical Smell",
+      "detailed_description": "When my year 2 class arrived this morning there was a very strong acidic smell in the classroom. The floor was still damp. Cleaning team had used a new descaler product. One child said she felt sick and I moved the class straight to the hall. The smell was still there 20 minutes later.",
+      "symptoms": [
+        "Nausea",
+        "Eye irritation",
+        "Coughing"
+      ],
+      "affected_count": 29,
+      "duration": "Discovered this morning",
+      "observations": [
+        "Strong chemical odour",
+        "Damp floor",
+        "Unapproved product"
+      ],
+      "observations_notes": "Product label photographed. Classroom currently closed.",
+      "severity_level": "Critical",
+      "urgency": true,
+      "related_incidents": "None previous for this supplier.",
+      "attachments": [
+        {
+          "file_name": "product_label.jpg",
+          "file_type": "image/jpeg"
+        }
+      ],
+      "assigned_officer_name": "Samira Ahmed",
+      "follow_up_date": "2026-04-17"
+    }
+  },
+  {
+    "case_id": "CASE-2026-00410",
+    "case_type": "air_quality_concern",
+    "status": "pending_decision",
+    "applicant": {
+      "name": "Emma Lockhart",
+      "reference": "AQ-2026-00410",
+      "date_of_birth": null
+    },
+    "assigned_to": "team_a",
+    "created_date": "2026-02-05",
+    "last_updated": "2026-04-08",
+    "severity_level": "Medium",
+    "is_urgent": false,
+    "timeline": [
+      {
+        "date": "2026-02-05",
+        "event": "case_created",
+        "note": "Teacher reported classroom 6A consistently cold during winter term — pupils keeping coats on indoors."
+      },
+      {
+        "date": "2026-02-12",
+        "event": "evidence_requested",
+        "note": "Temperature logger installed for 2 weeks."
+      },
+      {
+        "date": "2026-02-27",
+        "event": "evidence_received",
+        "note": "Morning temperatures consistently 13-15°C until 10am. BMS schedule identified as cause."
+      },
+      {
+        "date": "2026-03-15",
+        "event": "under_review",
+        "note": "BMS reprogramming proposal and radiator balance check scheduled."
+      },
+      {
+        "date": "2026-04-08",
+        "event": "pending_decision",
+        "note": "Remediation plan drafted. Awaiting facilities sign-off before closure."
+      }
+    ],
+    "case_notes": "Classroom 6A at Northgate Secondary was consistently underheated during winter term — BMS schedule started heating too late. Reprogrammed; radiator balance also adjusted. Plan signed off pending; closure expected this week.",
+    "submission_payload": {
+      "submitter_name": "Emma Lockhart",
+      "submitter_role": "Teaching Staff",
+      "contact_email": "e.lockhart@crownhill.sch.example",
+      "contact_phone": "01142 555 047",
+      "school_name": "Northgate Secondary School",
+      "building_location_room": "Classroom 6A",
+      "incident_datetime": "2026-02-05T08:45",
+      "issue_category": "Temperature Issues",
+      "detailed_description": "Classroom is very cold first thing. Pupils keep coats and gloves on until mid-morning. Colder than other rooms on the same corridor. Has happened all winter term.",
+      "symptoms": [
+        "Discomfort",
+        "Difficulty concentrating"
+      ],
+      "affected_count": 32,
+      "duration": "Whole winter term",
+      "observations": [
+        "Low temperature",
+        "Heating starting late",
+        "Similar rooms warmer"
+      ],
+      "observations_notes": "BMS schedule identified as cause.",
+      "severity_level": "Medium",
+      "urgency": false,
+      "related_incidents": "",
+      "attachments": [
+        {
+          "file_name": "temperature_log_feb.csv",
+          "file_type": "text/csv"
+        }
+      ],
+      "assigned_officer_name": "Jaya Patel",
+      "follow_up_date": "2026-04-22"
+    }
+  }
+]

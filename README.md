@@ -1,31 +1,43 @@
-# PIP Caseworker Assistant
+# Caseworker Assistant
 
-AI-powered prototype to reduce PIP (Personal Independence Payment) assessment backlogs.
+Prototype for **Challenge 3: Supporting casework decisions** — Version 1 AI Engineering
+Lab Hackathon, April 2026.
 
-**Problem:** DWP PIP clearance times hit 20 weeks in Jan 2026. 84,300 people waited 6+ months. The assessment step takes 15 of the 20 weeks. The PAC says DWP has "no adequate short-term plan."
+**Problem.** Caseworkers spend a large proportion of their day gathering information:
+opening a case management system, finding the right policy document, checking whether
+evidence has arrived, tracking deadlines. Time that could be spent on the judgement calls
+that only a human can make.
 
-**Solution:** Two-sided prototype — claimants upload documents via a portal, AI pre-processes and scores claims against PIP descriptors, caseworkers review with AI assistance.
+**Solution.** One screen per case showing:
+- the full timeline and notes
+- where the case sits in its workflow and what action is required next
+- the policy extracts that apply to this case type
+- a risk flag when evidence has been outstanding past policy thresholds
+
+A team-leader dashboard surfaces cases breaching reminder/escalation thresholds.
+An optional AI layer (Claude, or a deterministic mock when no API key is set) briefs
+caseworkers and answers questions grounded in the case record.
 
 ## Quick start
 
 ```bash
-# Set your API key
+# Optional — without it, AI runs in mocked mode (still useful for demo)
 export ANTHROPIC_API_KEY=sk-ant-your-key
 
-# Start everything
 docker compose up --build
 
-# Open in browser
 # Frontend: http://localhost:3000
 # API docs: http://localhost:8000/docs
 ```
 
-## Built for
-
-Version 1 AI Engineering Lab Hackathon — London, April 2026
-
 ## Stack
-
-- FastAPI + PostgreSQL + Claude API (Haiku)
-- React + Tailwind CSS (GOV.UK design)
+- FastAPI + PostgreSQL
+- Claude API (Haiku 4.5) — optional, mock fallback
+- React + Tailwind CSS (GOV.UK design language)
 - Docker Compose
+
+## What's real vs mocked
+- **Real** — case data, timeline, policy matching, workflow state machine, risk
+  computation from evidence thresholds, transitions.
+- **Mocked (by default)** — AI brief and ask-the-case chat. Set `ANTHROPIC_API_KEY`
+  to run against a live model. Both paths are grounded in the same case+policy context.

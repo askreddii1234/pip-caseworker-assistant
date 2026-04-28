@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mock dashboard for parents</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Mock dashboard for parents</h1>
+    </header>
+    <main class="container">
+      <aside class="sidebar">
+        <h2>Schools</h2>
+        <ul id="schoolsList" class="schools"></ul>
+      </aside>
+      <section class="details" id="details">
+        <div id="warning" class="warning hidden"></div>
+        <div class="timeframe-control hidden">
+          <label for="timeframeSelect">View:</label>
+          <select id="timeframeSelect">
+            <option value="today">Today's data</option>
+            <option value="3m">3 months</option>
+            <option value="6m">6 months</option>
+            <option value="1y">1 year</option>
+            <option value="5y">5 years</option>
+          </select>
+        </div>
+        <div id="content" class="content">
+          <p>Select a school to see pollutant levels.</p>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+[
+  {
+    "policy_id": "POL-BR-001",
+    "title": "Eligibility criteria for benefit reviews",
+    "applicable_case_types": ["benefit_review"],
+    "body": "A benefit review may be initiated in the following circumstances: (1) the claimant reports a change of circumstances that may affect entitlement, (2) information received from a third party suggests the claimant's circumstances have changed, (3) the claim is selected as part of the annual reassessment programme, or (4) the claim has been active for more than 24 months without a review. Reviews must be completed within 90 days of the trigger event."
+  },
+  {
+    "policy_id": "POL-BR-002",
+    "title": "Changes of circumstances — what triggers a review",
+    "applicable_case_types": ["benefit_review"],
+    "body": "The following changes of circumstances must be reported by the claimant within 14 days and will trigger a review: change of address, change of employment status or working hours, change in household composition, change in income above or below the relevant threshold, or commencement or cessation of education. Failure to report a change of circumstances within 14 days may result in recovery of overpaid amounts."
+  },
+  {
+    "policy_id": "POL-BR-003",
+    "title": "Evidence requirements for benefit reviews",
+    "applicable_case_types": ["benefit_review"],
+    "body": "When a benefit review is triggered by a change of circumstances, the caseworker must obtain: (1) proof of the new address (if applicable), (2) an income statement covering the 3 months prior to the change, and (3) a signed declaration confirming the change. If any evidence is outstanding after 28 days, the caseworker should issue a reminder. If outstanding after 56 days, the case should be escalated to a team leader."
+  },
+  {
+    "policy_id": "POL-BR-004",
+    "title": "Benefit review decisions — sign-off requirements",
+    "applicable_case_types": ["benefit_review"],
+    "body": "Decisions resulting in an award increase of more than £50 per week require sign-off from a team leader before the claimant is notified. Decisions resulting in a reduction or cessation of benefit must be accompanied by a mandatory reconsideration notice. All decisions must be notified to the claimant in writing within 5 working days of the decision being made."
+  },
+  {
+    "policy_id": "POL-LA-001",
+    "title": "Eligibility to hold a licence",
+    "applicable_case_types": ["licence_application"],
+    "body": "An applicant for a licence must: (1) be aged 18 or over, or be a registered legal entity, (2) not have had a licence revoked within the preceding 5 years, (3) not be subject to any current court order that would prohibit the activity being licensed, and (4) hold valid public liability insurance of at least £2 million for premises or event licences. Applications that do not meet these criteria must be refused at the initial assessment stage."
+  },
+  {
+    "policy_id": "POL-LA-002",
+    "title": "Evidence requirements for licence applications",
+    "applicable_case_types": ["licence_application"],
+    "body": "All licence applications must be accompanied by: (1) proof of identity (passport or driving licence), (2) proof of address dated within the last 3 months, (3) a completed application form, and (4) the applicable fee. Premises licences additionally require a site plan and, where regulated entertainment is proposed, a noise management plan. Event licences additionally require a site plan, crowd management plan, and evidence of public liability insurance."
+  },
+  {
+    "policy_id": "POL-LA-003",
+    "title": "Consultation and objections process",
+    "applicable_case_types": ["licence_application"],
+    "body": "All new premises and event licence applications must be subject to a 28-day public consultation. Objections must be made in writing and must state the specific licensing objective they relate to. Objections from responsible authorities (police, fire service, environmental health) carry additional weight and must be considered in full. Where two or more substantive objections are received, the application must be referred to a senior caseworker before a decision is issued."
+  },
+  {
+    "policy_id": "POL-CC-001",
+    "title": "Triggers for compliance checks",
+    "applicable_case_types": ["compliance_check"],
+    "body": "A compliance check may be initiated in the following circumstances: (1) as part of the scheduled annual inspection programme, (2) following receipt of a complaint or referral from a third party, (3) where intelligence suggests non-compliance, or (4) where a previous inspection identified issues requiring follow-up. Compliance checks triggered by third-party referrals must be acknowledged within 5 working days and commenced within 20 working days."
+  },
+  {
+    "policy_id": "POL-CC-002",
+    "title": "Evidence gathering in compliance checks",
+    "applicable_case_types": ["compliance_check"],
+    "body": "The caseworker must request relevant documentation at the outset of the compliance check. The organisation must respond within 28 days. Where a site visit is required, the caseworker must provide at least 5 working days' notice except in cases where there is a risk that evidence may be concealed or destroyed. Site visits must be conducted by at least two officers. A written record of all findings must be completed within 3 working days of the visit."
+  },
+  {
+    "policy_id": "POL-CC-003",
+    "title": "Enforcement thresholds and escalation",
+    "applicable_case_types": ["compliance_check"],
+    "body": "Where a compliance check identifies a minor breach (defined as a breach that does not present a risk to the public or to individuals), the caseworker may issue a written warning and allow 28 days for remediation. Where a serious breach is identified (defined as a breach that presents a risk to the public, involves financial irregularity, or involves a repeated failure), the case must be escalated to a senior officer within 2 working days. Legal proceedings may be recommended by the senior officer where the breach meets the relevant threshold."
+  },
+  {
+    "policy_id": "POL-AQ-001",
+    "title": "Triage and acknowledgement for air quality concerns",
+    "applicable_case_types": ["air_quality_concern"],
+    "body": "All air quality reports from schools — whether submitted by a parent, student, staff member or admin — must be acknowledged within 2 working days. The caseworker must record issue category, reported severity and whether the submitter has flagged the concern as urgent. Cases with reported symptoms affecting more than 5 individuals, or where the issue category is Chemical Smell or Mold/Moisture, should be reviewed for possible upgrade to High or Critical severity regardless of submitter rating."
+  },
+  {
+    "policy_id": "POL-AQ-002",
+    "title": "Inspection protocol by issue category",
+    "applicable_case_types": ["air_quality_concern"],
+    "body": "Mold / Moisture: physical inspection within 5 working days; take moisture readings and photograph affected areas. Poor Ventilation: CO2 assessment within 5 working days using calibrated monitor; record peak and average readings during occupied hours. Chemical Smell: same-day site attendance; identify source before resuming use of affected space. Dust / Particles: inspection within 3 working days of maintenance works; air quality reading if dust is ongoing. Temperature Issues: record readings over 48 hours before planning remediation. Odor (non-chemical): inspection within 7 working days."
+  },
+  {
+    "policy_id": "POL-AQ-003",
+    "title": "Severity classification",
+    "applicable_case_types": ["air_quality_concern"],
+    "body": "Low: minor comfort concern with no reported symptoms, single-location issue. Medium: symptoms reported but not requiring medical attention, issue affects one classroom or corridor. High: symptoms affecting 5+ people, repeated or persistent issue, vulnerable groups affected (e.g. pupils with asthma), or Mold/Moisture or Chemical categories. Critical: any symptom requiring medical attention, chemical spill, loss of consciousness reported, or risk to evacuation of a whole building. Severity may be upgraded but not downgraded without team leader sign-off."
+  },
+  {
+    "policy_id": "POL-AQ-004",
+    "title": "Critical escalation — same-day response",
+    "applicable_case_types": ["air_quality_concern"],
+    "body": "Any case classified as Critical must be escalated to a team leader on the same working day it is received. The affected area must be closed to pupils and staff until a qualified assessor has attended site. The submitter must be contacted by telephone — email-only communication is not acceptable for Critical cases. A holding update must be issued to school leadership within 2 hours of escalation."
+  },
+  {
+    "policy_id": "POL-AQ-005",
+    "title": "Submitter and school communication",
+    "applicable_case_types": ["air_quality_concern"],
+    "body": "The named submitter must receive an acknowledgement within 2 working days of case creation, a progress update at least every 5 working days while the case is open, and a closure notification within 2 working days of remediation. Where the submitter is a parent or student, communication must use plain English and avoid technical terminology unless defined. Where the issue affects multiple classrooms, a summary must also be provided to school leadership via the headteacher's office."
+  }
+]

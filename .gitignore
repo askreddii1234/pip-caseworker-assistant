@@ -1,8 +1,37 @@
-node_modules/
+# Python
 __pycache__/
 *.pyc
-.env
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / frontend
+node_modules/
 dist/
+.vite/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db
+
+# App-specific
 uploads/
 pgdata/
-.DS_Store
+
+# Claude Code local settings (commit agents/commands; not personal settings)
+.claude/settings.local.json
+
+# Stray scratch files (not part of the codebase)
+New Text Document.txt
+{backend
+new_task.md
+project_scope.txt
+review.txt

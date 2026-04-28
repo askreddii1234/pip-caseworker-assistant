@@ -23,7 +23,8 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql://pipassist:pipassist_dev@db:5432/pipassist
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://${PUBLIC_HOST:-localhost}:3000}
     depends_on:
       db:
         condition: service_healthy
@@ -37,7 +38,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      VITE_API_URL: http://localhost:8000
+      VITE_API_URL: http://${PUBLIC_HOST:-localhost}:8000
     depends_on:
       - backend
     volumes:
