@@ -33,7 +33,7 @@ flowchart TB
     subgraph FE["FRONTEND  ·  React 18 · Vite · Tailwind · GOV.UK"]
         direction LR
         FE_PUB["ApplicantPortal<br/>UploadPortal<br/>AirQualityIntake"]
-        FE_CW["CaseQueue<br/>CaseDetail<br/>(AI brief + Q&amp;A)"]
+        FE_CW["CaseQueue<br/>CaseDetail<br/>AI brief and Q and A"]
         FE_LD["RiskDashboard<br/>SchoolsAirQuality<br/>(cases ↔ sensors)"]
         FE_API["api.js — fetch + SSE"]
     end
@@ -43,7 +43,7 @@ flowchart TB
         direction TB
         API_MAIN["main.py — app, CORS, lifespan<br/>(seeds DB + builds RAG index)"]
         API_R1["routes/cases.py<br/>routes/air_quality.py<br/>routes/upload.py<br/>routes/school_air_quality.py"]
-        API_R2["routes/ai.py<br/>POST /ai/cases/{id}/summarise<br/>GET&nbsp;&nbsp;/ai/cases/{id}/ask/stream (SSE)"]
+        API_R2["routes/ai.py<br/>POST /ai/cases/:id/summarise<br/>GET /ai/cases/:id/ask/stream - SSE"]
         API_MAIN --- API_R1
         API_MAIN --- API_R2
     end
@@ -141,7 +141,7 @@ erDiagram
         text   case_notes
         text   ai_summary
         string severity_level "Low | Medium | High | Critical"
-        boolean is_urgent
+        bool is_urgent
         json   submission_payload "8-section AQ intake (JSONB)"
     }
     CASE_TIMELINE {
